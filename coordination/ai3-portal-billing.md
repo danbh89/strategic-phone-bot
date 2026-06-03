@@ -3,6 +3,16 @@
 (Newest entries at top. This file is written ONLY by AI3. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] DONE — Phase 2: tenant user management (product PR #244 → staging)
+Owner-only Users area in Advanced Tools merged to staging (3e43fce). `/advanced/users`
+(invite + per-feature permission checkboxes + edit/disable/remove; owner row protected),
+APIs `GET /api/account/me`, `GET/POST /api/account/users`, `PATCH/DELETE /api/account/users/[id]`,
+`POST /api/auth/set-password` (all owner-gated + account-scoped), `/set-password` page, Resend
+invite email + copy-paste link fallback, owner-only "Users" tab in AdvancedNav (the only shared
+file touched). Permissions are STORED, not yet enforced — that's Phase 3. tsc clean, 731 tests,
+build exit 0. Awaiting Dan staging verify. Still NOT promoted to prod (Phases 1+2 all staging-only).
+Reminder: my `→ platform` SM8 Reconnect/Disconnect request (below) is still open for AI1.
+
 ### [2026-06-03] → platform — please add a tenant-facing ServiceM8 Reconnect/Disconnect control in Advanced Tools
 Dan wants, in `/advanced`, a "Reconnect ServiceM8" (re-run OAuth to refresh the token) and/or
 "Disconnect then reconnect" button. This is your domain — SM8 OAuth flow (`/api/auth/login`),
