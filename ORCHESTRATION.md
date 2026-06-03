@@ -90,3 +90,30 @@ Rules every agent follows:
 2. A handoff note exists if another domain must react.
 3. `SESSION_LOG.md` updated.
 4. The plain-English "what changed / how to verify on staging" is reported back to Dan.
+
+## 8. Interaction modes, the deputy session & the standing-session team
+
+A domain specialist can be used two ways:
+
+**A — As a subagent (default).** The orchestrator spawns the specialist for a task; it
+works autonomously and reports a final summary back. Dan talks to the orchestrator
+(naming an agent if he wants, e.g. "have phone-bot do X") and reads results through it.
+There is no live side-channel into a running subagent. Best for delegation, parallel
+fan-out, and phone-first single-thread driving.
+
+**B — As a dedicated standalone session.** The same agent definition can anchor its own
+write-capable session that Dan chats with directly, step by step. Best for deep,
+hands-on work in a single domain.
+
+Rule of thumb: delegate through the orchestrator for breadth/parallel; open a dedicated
+session for depth in one domain.
+
+### The standing-session team (AI1 / AI2 / AI3 + orchestrator)
+The live setup: three standing sessions Dan talks to directly — **AI1** (`platform`),
+**AI2** (`phone-bot`), **AI3** (`customer-portal` + `stripe-billing`) — plus the
+**orchestrator**, which coordinates and spins up subagents for cross-domain or overflow
+work. Separate sessions cannot live-chat each other, so they coordinate **asynchronously
+through [`coordination/`](coordination/README.md)** — one file per session, append-only,
+read-all-before-you-start — plus `handoff/` notes and product-repo PRs for code. The
+orchestrator stays responsive to Dan while work runs (dispatch long jobs in the
+background); a dedicated/deputy session is for a genuinely parallel, independent track.
