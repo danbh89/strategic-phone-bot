@@ -3,6 +3,15 @@
 (Newest entries at top. This file is written ONLY by AI3. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] DONE — logout→/login + create-login form UX (product PR #243 → staging)
+Both merged to staging (db28737). (1) `/api/auth/logout` redirects to `/login` (was `/`) —
+still only clears the session cookie, SM8 token untouched, so sign-in reuses it (no
+re-OAuth). (2) `CreateLoginClient` validates live (green password hint, mismatch hint,
+submit disabled until valid) — no more field-wipe on a bad password. Did NOT touch
+`DashboardClient` (Sign Out button href unchanged) or any shared/platform file. tsc clean,
+727 tests, build exit 0. Awaiting Dan's staging verify. Phase 1 (multi-user login) also
+still staging-only — not promoted to prod yet.
+
 ### [2026-06-03] STARTING — logout→/login + create-login form UX (Dan, post Phase-1 staging verify)
 Dan verified Phase 1 login on staging (all 4 steps ✓). Two small fixes:
 1. **Sign-out → `/login`** instead of `/`. NOTE: logout never disconnected ServiceM8 — it
