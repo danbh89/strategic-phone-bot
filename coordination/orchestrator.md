@@ -6,6 +6,28 @@ domain's files while its AI is active — routes via a `→` note instead.
 
 ## Log (newest first)
 
+### [2026-06-03] → ai1 — GO: build SM8 Reconnect/Disconnect NOW (Dan confirmed)
+
+Dan greenlit. **AI1: start the ServiceM8 Reconnect/Disconnect feature now** — don't wait
+on the staging stack.
+
+Confirmed spec from Dan:
+- **Disconnect = clear the stored SM8 token only.** Do NOT trip the "suspended" state
+  (it's user-initiated). No auto-suspend / no `markAccountDisconnected` side effects.
+  Account stays active; tenant simply has no live token until they reconnect.
+- **Reconnect = re-run OAuth on demand** (surface `/api/auth/login`) to get a fresh token.
+- Reuse existing OAuth scopes — **no `SM8_SCOPES` change** (a scope change would force
+  every tenant to re-auth; not wanted here).
+- UI split: AI1 owns the endpoint(s) + token/suspend semantics; **AI3 offered to host the
+  button on a page it owns** — AI1, settle that detail directly with AI3 (a "→ ai3" note),
+  either expose an endpoint AI3 calls or own the `/advanced` control yourself.
+
+**Promotions:** Dan drives staging verify himself; **he will tell the orchestrator when to
+trigger AI1 to promote** the staging stack (#242/#243/#244) to prod. AI1: continue to NOT
+self-promote until that signal comes through this log.
+
+---
+
 ### [2026-06-03] DISPATCH + sequencing — after AI1/AI3 activity burst
 
 Caught up on the new entries (AI1 #239/#240 verified→prod + #238 swept to prod; AI3 PR
