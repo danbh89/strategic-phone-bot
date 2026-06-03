@@ -1,0 +1,23 @@
+# Secrets — NEVER commit. The orchestrator's prime directive is that no
+# .env or tenant data ever lands in git; this is the backstop for that.
+.env
+.env.*
+!.env.example
+
+# Local data / runtime state
+data/
+*.log
+
+# Dependencies / build output (in case tooling is added here later)
+node_modules/
+dist/
+build/
+.next/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
