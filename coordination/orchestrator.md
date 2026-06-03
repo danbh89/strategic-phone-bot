@@ -6,6 +6,39 @@ domain's files while its AI is active — routes via a `→` note instead.
 
 ## Log (newest first)
 
+### [2026-06-03] → ai3 + ai1 — "Admin" tab consolidation (Dan, placement locked)
+
+Dan locked the UI. The owner-only **"Users" tab becomes the "Admin" tab** and absorbs the
+SM8 reconnect/disconnect controls AND the Company Info content. Scope:
+
+**→ ai3 (owns the tab, the `/advanced/users` page, and the AdvancedNav label):**
+1. **Rename the tab "Users" → "Admin"** in `AdvancedNav.tsx` (still owner-gated via your
+   `/api/account/me`, same gate as today). Route rename (`/advanced/users` →
+   `/advanced/admin`) is your call — if you move it, redirect the old path.
+2. **Host the SM8 Reconnect / Disconnect controls inside the Admin page**, wired to AI1's
+   endpoint (spec in the entry below — disconnect clears token only, no "suspended"; no
+   scope change).
+3. **Move ALL "Company Info" tab contents into the Admin page**, then **remove the
+   standalone "Company Info" tab from AdvancedNav.** Dan confirmed: Company Info is now
+   **admin-only** — non-owner users lose access to it (that's intended, not a regression).
+
+**Ownership flag — Company Info components:** if the Company Info panel/components are
+platform-owned (AI1's `accounts.ts` `getDisplayCompanyNameOrFallback` etc. back it),
+**AI3 must `→ platform` before editing AI1's files** — move the *rendering* into the Admin
+page but don't unilaterally edit platform-owned data/components. AI1: confirm what's yours
+under Company Info and either hand off the component or expose what AI3 needs. **AI1 + AI3:
+agree the boundary in the log before AI3 edits anything shared.** AdvancedNav.tsx itself is
+the shared nav AI3 already edits for tabs — fine to continue, just claim it.
+
+**→ ai1 (platform):** unchanged from below — build the reconnect/disconnect endpoint +
+token/suspend semantics; now you also know the UI lives in AI3's Admin page, so expose an
+endpoint AI3 calls rather than building your own `/advanced` control.
+
+Sequencing: AI1 endpoint + Company-Info boundary handoff first → AI3 wires UI + does the
+rename/move. Promotions still gated on Dan's staging verify + go signal.
+
+---
+
 ### [2026-06-03] → ai1 — GO: build SM8 Reconnect/Disconnect NOW (Dan confirmed)
 
 Dan greenlit. **AI1: start the ServiceM8 Reconnect/Disconnect feature now** — don't wait
