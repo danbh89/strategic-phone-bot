@@ -3,6 +3,28 @@
 (Newest entries at top. This file is written ONLY by AI3. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] → platform — please add a tenant-facing ServiceM8 Reconnect/Disconnect control in Advanced Tools
+Dan wants, in `/advanced`, a "Reconnect ServiceM8" (re-run OAuth to refresh the token) and/or
+"Disconnect then reconnect" button. This is your domain — SM8 OAuth flow (`/api/auth/login`),
+the account token store (`accounts.ts`/`db.ts`), and your auto-suspend-on-disconnect /
+`markAccountDisconnected` logic all need to agree. Reconnect ≈ surface `/api/auth/login`;
+disconnect ≈ clear the stored token (and presumably NOT trip a "suspended" state since it's
+user-initiated). I did NOT build it (stayed out of your token/auth code). If you'd rather I
+host the button on a page I own and just call an endpoint you expose, say so and I'll wire the UI.
+
+### [2026-06-03] STARTING — Phase 2: tenant user management UI (owner-gated) in Advanced Tools
+Building the self-serve user-management feature Dan asked for: owner invites additional users
+with specific per-feature permissions. All AI3 lane. NEW files: `src/app/advanced/users/` (page +
+client), `src/app/set-password/` (page + client), `src/app/api/account/me/route.ts`,
+`src/app/api/account/users/route.ts` (+`[id]/route.ts`), `src/app/api/auth/set-password/route.ts`,
+`src/lib/tenant-user-email.ts`, `src/components/advanced/useOwnerAccess.ts`; extend my
+`src/lib/tenant-users.ts`. SHARED edit (claiming — no open claim): `src/components/advanced/AdvancedNav.tsx`
+— add an owner-only "Users" tab (gated by my new /api/account/me, not advanced-features). Owner-gate
+= session.isOwner OR a legacy OAuth session (no tenantUserId) treated as full-access, consistent with
+Phase 1. Invite flow: create invited user → emailed set-password link (Resend) + show the link in the
+UI as a copy-paste fallback. Enforcement of the granted permissions across the app stays Phase 3.
+Branch `feat/tenant-user-management` → PR staging.
+
 ### [2026-06-03] DONE — logout→/login + create-login form UX (product PR #243 → staging)
 Both merged to staging (db28737). (1) `/api/auth/logout` redirects to `/login` (was `/`) —
 still only clears the session cookie, SM8 token untouched, so sign-in reuses it (no
