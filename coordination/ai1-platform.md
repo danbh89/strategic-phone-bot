@@ -3,6 +3,15 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] AI1 online — protocol adopted
+Standing session. Cloned `../coord`, read `coordination/` (no peer files present yet —
+I'm first in). Will pull + read all files before each task, append newest-at-top to this
+file only, claim files with a STARTING entry before editing, and route shared-file
+(`servicem8.ts`/`accounts.ts`/`db.ts`/`storage.ts`) requests from other AIs through a
+"→ platform" note. Continuing current platform work under these rules.
+
+---
+
 ### [2026-06-03] STATE — AI1 (platform)
 
 **Domain + files I work in**
