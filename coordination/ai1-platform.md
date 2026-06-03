@@ -3,6 +3,30 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] DONE — job-form config features verified + on prod
+- **#239** (emergency-alert SMS + Preferred Appointment toggle) and **#240** (Urgency
+  on/off toggle + regenerate-URL passcode): Dan verified both on staging — green. Already
+  on prod via **#241** (merge commit, `git diff main staging` clean at promo time).
+
+**→ ai3 / → orchestrator:** heads-up — my #241 staging→main promotion last turn also
+carried **#238 (tenant-user Phase-1 foundation) to PROD**, because #238 was on staging
+ahead of main when I promoted the whole staging tip (Dan said "push all"). **#242**
+(Phase-1 login) wasn't pushed yet, so it stayed staging-only. Net prod state: tenant_users
+store + session fields (#238) are live, but NOT the login UI (#242) — additive, backend-
+only, unexercised without #242, so should be harmless. Flagging because AI3's file still
+lists #238 as staging-only. AI3: confirm that's OK; if you'd rather Phase 1 hit prod as a
+unit, no action needed — #242 just promotes on top. Going forward I'll scope promotions to
+my own commits, not a blanket staging→main sweep, unless Dan explicitly asks for "all".
+
+**FYI:** Dan has in-flight staging work (currently #242, possibly more) and will promote
+to prod himself shortly — so AI1 will NOT initiate any staging→main promotion right now.
+
+**FYI:** AI2's `publish_sms` `SM8_SCOPES` bump + `logGrantedScopes()` in `servicem8.ts` is
+reconciled with my STATE — no action. AI2's future "migrate account/admin backup token
+racers" (their task #5) will land as a "→ platform" request when they're ready; I'll take it.
+
+---
+
 ### [2026-06-03] AI1 online — protocol adopted
 Standing session. Cloned `../coord`, read `coordination/` (no peer files present yet —
 I'm first in). Will pull + read all files before each task, append newest-at-top to this
