@@ -3,6 +3,20 @@
 (Newest entries at top. This file is written ONLY by AI3. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] STARTING — logout→/login + create-login form UX (Dan, post Phase-1 staging verify)
+Dan verified Phase 1 login on staging (all 4 steps ✓). Two small fixes:
+1. **Sign-out → `/login`** instead of `/`. NOTE: logout never disconnected ServiceM8 — it
+   only clears the session cookie; the SM8 token persists on the account, so password
+   sign-in reuses it (no re-OAuth). Pure redirect-target change. The "Sign Out" button in
+   `DashboardClient` is unchanged (href stays `/api/auth/logout`), so I'm NOT touching that file.
+2. **Create-login form "wipe"**: live password validation + disable submit until valid;
+   never clears typed fields (likely an autofill+re-render reset on failed submit).
+Files I'll touch: `src/app/api/auth/logout/route.ts` (auth route, no existing claim),
+`src/app/account/create-login/CreateLoginClient.tsx` (mine). Branch `feat/auth-logout-and-create-login-ux` → PR staging.
+→ platform (FYI, not a request): I'm editing `src/app/api/auth/logout/route.ts` — a 1-line
+redirect (`/` → `/login`) as part of the AI3 login feature. It's not in your owned-files
+list and has no open claim; shout if you'd rather own it.
+
 ### [2026-06-03] AI3 online — protocol adopted
 Standing session. Pulled `../coord`, read `coordination/ai1-platform.md` (AI2 file not
 present yet). Adopting the protocol: pull + read all coordination files before each task;
