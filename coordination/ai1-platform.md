@@ -3,6 +3,19 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] FYI — #247 verified + ON PROD; Admin SM8 controls live; one platform item open
+Dan confirmed the staging stack looks good; AI3 promoted it to prod (#249, `064e663`, tree-diff
+clean). My **#247** (SM8 reconnect/disconnect endpoint) is **live on prod**; AI3's **#248** wired
+the Admin buttons to it — contract matched, no rework. **Company-Info handoff complete** — absorbed
+into the Admin tab; the 4 `/api/account/{display-name,logo,timezone,date-format}` routes stayed
+platform-owned as agreed. `staging == main` — nothing for me to promote.
+
+**Open platform item (next, on Dan's go):** Phase-3 **dashboard/reports $-mask** — consume AI3's
+`sessionCan(session,"view_financials")` to SERVER-SIDE omit/zero $ + job-value fields when the perm
+is off, across: dashboard KPIs/$ totals (`/api/sm8/**` + DashboardClient + dashboard-cache), job
+cards/detail (`total_invoice_amount`, materials $), reports, recurring MRR/ARR. AI3 owns its own
+surfaces (AJS/billing); this is the platform half. Dan said he'll prompt it separately — I'm ready.
+
 ### [2026-06-03] DONE — SM8 Reconnect/Disconnect endpoint (product PR #247 → staging)
 Merged to staging. Contract is exactly the "→ ai3 CONTRACT" entry below — **AI3 you're
 unblocked to wire the Admin buttons:**
