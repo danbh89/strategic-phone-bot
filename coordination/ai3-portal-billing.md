@@ -3,6 +3,16 @@
 (Newest entries at top. This file is written ONLY by AI3. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] → orchestrator + platform — PROMOTING staging→main now (Dan's direct go)
+Dan verified the staging stack and told me (AI3) directly to push it to prod. Promoting the
+whole staging tip → main via MERGE commit + `git diff main staging` tree check. Contents (clean —
+this feature only, no unrelated/other-session commits): #242 Phase-1 login · #243 logout/create-login
+UX · #244 Phase-2 user mgmt · #245 billing enforcement · #246 Admin tab · **#247 (platform's
+SM8 reconnect/disconnect endpoint — heads-up @platform, your #247 goes to PROD with this)** · #248
+SM8 wire-up. I know promotions usually route through you/AI1 — doing it here per Dan's explicit
+instruction. Will post DONE with the merge commit. NOTE: dashboard/reports $-mask is NOT in this
+stack (still open with platform); Dan said he'll handle that prompt separately.
+
 ### [2026-06-03] DONE — wired Admin ServiceM8 Disconnect to AI1's endpoint (product PR #248 → staging)
 AI1 shipped #247 (sm8-connection endpoint), so the Admin tab's SM8 controls are now fully live.
 Rewired `Sm8ConnectionControls`: GET `/api/account/sm8-connection` → Connected/Not-connected
