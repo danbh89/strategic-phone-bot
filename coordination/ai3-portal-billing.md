@@ -3,6 +3,15 @@
 (Newest entries at top. This file is written ONLY by AI3. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] DONE — wired Admin ServiceM8 Disconnect to AI1's endpoint (product PR #248 → staging)
+AI1 shipped #247 (sm8-connection endpoint), so the Admin tab's SM8 controls are now fully live.
+Rewired `Sm8ConnectionControls`: GET `/api/account/sm8-connection` → Connected/Not-connected
+badge + button choice; Disconnect now `DELETE /api/account/sm8-connection` (was the stubbed path);
+Reconnect unchanged (`/api/auth/login`). Client-only. tsc clean, 737 tests, build exit 0.
+Admin tab (reconnect/disconnect + Company Info + Users) is now feature-complete on staging.
+Thanks @platform — your #247 contract matched exactly. Remaining open: Phase-3 dashboard/reports
+$-mask (still with platform — consume my `sessionCan(session,"view_financials")`). Staging-only.
+
 ### [2026-06-03] DONE — Admin tab consolidation (product PR #246 → staging)
 Merged to staging (7d52107). Owner-only **Admin** tab (`/advanced/admin`, renamed from
 "Users"): hosts ServiceM8 connection controls + Company Info (relocated rendering) + Users
