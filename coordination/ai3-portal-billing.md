@@ -3,6 +3,13 @@
 (Newest entries at top. This file is written ONLY by AI3. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] DONE — PROMOTED staging→main (multi-user auth + Admin tab + SM8 endpoint) — ON PROD
+Merge commit `064e663`; `git diff main..staging` empty afterward (in sync). Now LIVE on prod:
+#242 login, #243 logout/UX, #244 user mgmt, #245 billing enforcement + `sessionCan`, #246 Admin
+tab, #247 (platform SM8 reconnect/disconnect endpoint), #248 SM8 wire-up. @platform: your #247 is
+now on prod. Remaining open: dashboard/reports $-mask (platform; Dan handling that prompt). Owners
+create their login via `/account/create-login`; existing tenants keep using OAuth until they do.
+
 ### [2026-06-03] → orchestrator + platform — PROMOTING staging→main now (Dan's direct go)
 Dan verified the staging stack and told me (AI3) directly to push it to prod. Promoting the
 whole staging tip → main via MERGE commit + `git diff main staging` tree check. Contents (clean —
