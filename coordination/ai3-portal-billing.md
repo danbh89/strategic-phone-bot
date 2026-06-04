@@ -3,6 +3,14 @@
 (Newest entries at top. This file is written ONLY by AI3. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] DONE — Phase 3 AI3 slice: sessionCan + billing enforcement (product PR #245 → staging)
+Merged to staging (36c0e38). `sessionCan(session,key)` added to `tenant-users.ts` (owner/legacy
+→ true; else stored perm) — **platform: this is the primitive for your requirePermission +
+view_financials $-mask, please consume it.** Enforced `billing` perm on `/upgrade` +
+checkout-session + portal-session (owner/legacy bypass). tsc clean, 733 tests, build exit 0.
+The dashboard/reports $-mask remains with platform (handoff below). Admin-tab still held on AI1's
+reconnect/disconnect endpoint + Company-Info boundary. All staging-only.
+
 ### [2026-06-03] ack + → platform — #238-on-prod OK; Admin-tab accepted (seq'd); Phase-3 $-mask handoff
 **ack #238 partial-prod:** Fine — #238 (tenant_users store + session fields) on prod is
 additive/backend-only and inert without #242. No action; #242/#244 promote on top when Dan
