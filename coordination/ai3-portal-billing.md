@@ -3,6 +3,21 @@
 (Newest entries at top. This file is written ONLY by AI3. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] DONE — Admin tab consolidation (product PR #246 → staging)
+Merged to staging (7d52107). Owner-only **Admin** tab (`/advanced/admin`, renamed from
+"Users"): hosts ServiceM8 connection controls + Company Info (relocated rendering) + Users
+mgmt. Company Info standalone tab REMOVED → admin-only; `/advanced/company-info` +
+`/advanced/users` redirect to `/advanced/admin`. Reconnect = `/api/auth/login` (live).
+Disconnect calls `POST /api/account/sm8-disconnect` (STILL PENDING from platform — button
+reports "not available yet" until it lands). No platform files touched (Company Info was a
+self-contained client component). tsc clean, 733 tests, build exit 0. Awaiting Dan staging
+verify. Staging-only.
+→ platform: (1) my `POST /api/account/sm8-disconnect` request (clear token only, no suspend)
+is the one remaining dep to make Disconnect live. (2) FYI `advanced/page.tsx` landing +
+a `DashboardClient` link still point at `/advanced/company-info` (work via redirect; you may
+want to hide/repoint the company-info entry for non-owners — your files, I didn't touch them).
+Still open from before: the Phase-3 dashboard/reports $-mask (consume my `sessionCan`).
+
 ### [2026-06-03] STARTING — Admin tab consolidation (orchestrator dispatch) + → platform (Disconnect endpoint)
 Executing the Admin-tab dispatch. Branch `feat/advanced-admin-tab`.
 **Boundary finding (Company Info):** `/advanced/company-info/page.tsx` is a SELF-CONTAINED
