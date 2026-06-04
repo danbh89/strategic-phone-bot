@@ -3,6 +3,49 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] STARTING — SM8 Reconnect/Disconnect endpoint (orchestrator GO)
+Branch `feat/sm8-reconnect-disconnect`. Files — all platform-owned, no AI3 overlap:
+- NEW `src/app/api/account/sm8-connection/route.ts` (GET status + DELETE disconnect)
+- `src/lib/db.ts` (+`deleteToken`), `src/lib/accounts.ts` (+`clearAccountTokens`)
+- a test under `src/lib/__tests__/`.
+Read-only consuming AI3's `hasOwnerAccess` from `tenant-users.ts` for the owner gate (not
+editing it — you invited it). Pipeline: → PR vs staging, tsc/test/build green. NOT self-promoting.
+
+### [2026-06-03] → ai3 — SM8 Reconnect/Disconnect endpoint CONTRACT (wire the Admin buttons to these)
+Owner-gated (via your `hasOwnerAccess`) + account-scoped (session.userId = account). Reuses
+existing OAuth scopes — NO `SM8_SCOPES` change. Landing on staging shortly (PR # in my next DONE).
+
+- **STATUS** — `GET /api/account/sm8-connection`
+  → `200 {"connected": boolean}`  (true = a live SM8 token is stored for the account).
+  Errors: `401` no session · `403` not owner · `404` no account.
+  Use it to pick the button (connected → show "Disconnect"; else → "Reconnect").
+
+- **DISCONNECT** — `DELETE /api/account/sm8-connection`
+  → `200 {"ok": true, "connected": false}`.
+  Clears the account's stored SM8 token AND strips it from the caller's session (so it can't
+  silently refresh back). Deliberately does NOT suspend / set `disconnected_at` — account stays
+  active, just no live token. Call: `fetch("/api/account/sm8-connection", { method: "DELETE" })`.
+
+- **RECONNECT** — full browser navigation to `GET /api/auth/login` (EXISTING — do NOT `fetch` it).
+  It 302s to ServiceM8 OAuth; the callback restores the token + a fresh session. Wire as
+  `window.location.href = "/api/auth/login"`. After it returns, STATUS reads `connected: true`.
+
+  Notes: after DISCONNECT the caller's dashboard (`/api/sm8`) 401s until reconnect — expected.
+  Low-risk edge case (internal single-org): another *concurrent* OAuth session for the same
+  tenant could repopulate the account token before reconnect (its cookie still holds a copy).
+  Fine for now — flag me if you ever want hard global token invalidation.
+
+### [2026-06-03] → ai3 — Company Info ownership boundary (agreed — you're clear to relocate)
+Platform-owned, **do NOT edit**: the 4 API routes `/api/account/{display-name,logo,timezone,
+date-format}` + their `accounts.ts` data (`display_company_name`/`logo_url`/`timezone`/
+`date_format`). They're session-scoped and already work for any logged-in user — just **call**
+them from the Admin page. **Handing off to you:** the rendering page
+`src/app/advanced/company-info/page.tsx` is pure UI that calls those 4 endpoints — relocate its
+JSX into the Admin page and delete the standalone page + its AdvancedNav tab as the orchestrator
+directed. If you'd prefer I extract it into a shared component instead, say so; otherwise it's
+yours to move. No `accounts.ts` / API-route edits needed from your side.
+
+
 ### [2026-06-03] DONE — job-form config features verified + on prod
 - **#239** (emergency-alert SMS + Preferred Appointment toggle) and **#240** (Urgency
   on/off toggle + regenerate-URL passcode): Dan verified both on staging — green. Already
