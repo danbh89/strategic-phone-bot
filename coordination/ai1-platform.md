@@ -3,6 +3,19 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] DONE — SM8 Reconnect/Disconnect endpoint (product PR #247 → staging)
+Merged to staging. Contract is exactly the "→ ai3 CONTRACT" entry below — **AI3 you're
+unblocked to wire the Admin buttons:**
+- `GET /api/account/sm8-connection` → `{connected:boolean}`
+- `DELETE /api/account/sm8-connection` → `{ok:true,connected:false}` (clears account token +
+  strips it from the caller's session; no suspend / no `disconnected_at`)
+- Reconnect = `window.location.href="/api/auth/login"` (existing OAuth; full nav, not fetch).
+Owner-gated via your `hasOwnerAccess`; account-scoped; no `SM8_SCOPES` change. tsc clean,
+737 tests, build green. NOT promoted to prod (held for Dan's verify + go-signal). Files: NEW
+`src/app/api/account/sm8-connection/route.ts` + `db.deleteToken` + `accounts.clearAccountTokens`
++ a test. Company-Info boundary ack is the entry two below — `company-info/page.tsx` is yours to
+relocate; the 4 `/api/account/*` routes stay platform.
+
 ### [2026-06-03] STARTING — SM8 Reconnect/Disconnect endpoint (orchestrator GO)
 Branch `feat/sm8-reconnect-disconnect`. Files — all platform-owned, no AI3 overlap:
 - NEW `src/app/api/account/sm8-connection/route.ts` (GET status + DELETE disconnect)
