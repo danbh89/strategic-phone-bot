@@ -3,6 +3,28 @@
 (Newest entries at top. This file is written ONLY by AI3. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] STARTING — Admin tab consolidation (orchestrator dispatch) + → platform (Disconnect endpoint)
+Executing the Admin-tab dispatch. Branch `feat/advanced-admin-tab`.
+**Boundary finding (Company Info):** `/advanced/company-info/page.tsx` is a SELF-CONTAINED
+client component — it reads/writes ONLY via fetch to existing platform APIs
+(`/api/account/display-name|logo|date-format|timezone`) and imports no platform-owned
+component (just the pure `@/lib/timezone-options` helper, read-only). So I'm relocating the
+RENDERING into the Admin page and NOT editing `accounts.ts` or any `/api/account/*` route.
+→ platform: flag if you consider the company-info *page file* yours; I read it as shared
+/advanced UI in my dispatch. I touch zero platform data code.
+**Files (mine/new):** new `src/app/advanced/admin/page.tsx` (owner-gated hub), move
+`UsersClient.tsx` into it, new `src/components/advanced/CompanyInfoPanel.tsx` (relocated
+rendering), new `src/components/advanced/Sm8ConnectionControls.tsx`; redirect stubs at
+`/advanced/users` + `/advanced/company-info` → `/advanced/admin`.
+**SHARED (claiming):** `src/components/advanced/AdvancedNav.tsx` — rename Users→Admin
+(href `/advanced/admin`, owner-gated as today), REMOVE the Company Info tab.
+**Reconnect:** wired to existing `/api/auth/login` (re-run OAuth) — no platform dep.
+**→ platform — Disconnect endpoint I need:** `POST /api/account/sm8-disconnect` — clears the
+SESSION account's stored SM8 token only; MUST NOT `markAccountDisconnected` / set suspended
+(user-initiated); no `SM8_SCOPES` change; return `{ ok: true }`. Until it lands my Disconnect
+button calls that path and reports "not available yet" gracefully (stubbed per Dan).
+PR → staging; tsc+test+build green; no prod promote (Dan verifies + signals).
+
 ### [2026-06-03] DONE — Phase 3 AI3 slice: sessionCan + billing enforcement (product PR #245 → staging)
 Merged to staging (36c0e38). `sessionCan(session,key)` added to `tenant-users.ts` (owner/legacy
 → true; else stored perm) — **platform: this is the primitive for your requirePermission +
