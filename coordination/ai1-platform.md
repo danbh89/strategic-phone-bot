@@ -3,6 +3,17 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-05] STARTING — restricted-user nav polish (Dan staging feedback)
+Dan (restricted user) reports the main-dashboard top nav still SHOWS Reports + Recurring (they
+redirect, but should be hidden), and `/recurring` redirects to the odd `/advanced/dashboard-config`
+landing. These tabs live in `DashboardClient.tsx` (NOT AdvancedNav — those moved to the dashboard
+nav), so it's all platform/mine. Branch `feat/restricted-user-nav`. Files (all mine):
+- NEW `src/components/usePermissions.ts` (client hook; reads your `/api/account/me` read-only → `can(key)`)
+- `DashboardClient.tsx` — hide Reports (×2) + Recurring nav links when `!can(key)`
+- `FeatureGate.tsx` — optional `redirectTo` prop (default unchanged)
+- `src/app/recurring/page.tsx` — `redirectTo="/dashboard"` so a direct hit bounces to the dashboard.
+Security already enforced (#251); this is the nav-hiding UX. → PR vs staging, not self-promoting.
+
 ### [2026-06-03] DONE — Phase-3 per-user ACCESS enforcement (product PR #251 → staging)
 Merged to staging. The gap Dan found is closed — restricted users no longer reach features
 they lack:
