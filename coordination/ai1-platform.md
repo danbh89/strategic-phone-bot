@@ -3,6 +3,27 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] STARTING — Phase-3 per-user ACCESS enforcement (Dan found the gap)
+Dan's test user (dashboard-only) could still reach reports + every advanced tool — only $ was
+masked. #250 gated just the financial routes; the per-user FEATURE/page gating was missing.
+Branch `feat/perm-enforcement`. Elegant fix, all platform-owned, **no AI3 file edits**:
+- `access.ts requireAdvancedFeature(slug)` → also `&& sessionCan(session, slug)` (covers all 31
+  advanced API routes by slug).
+- `/api/account/advanced-features` → return per-USER-AND-account flags
+  (`resolveFeatures(account)[slug] && sessionCan(session,slug)`). This feeds the hook BOTH your
+  AdvancedNav and FeatureGate consume — so nav-hiding + page-redirects fix themselves with **zero
+  edits to AdvancedNav.tsx**. NEW `src/lib/user-features.ts` holds the helper (can't live in
+  advanced-features.ts — tenant-users.ts imports FEATURE_SLUGS from it → cycle).
+- Core keys (not feature slugs): gate the Reports surface on `reports` —
+  `src/app/reports/page.tsx` redirect + `requirePermission("reports")` on `/api/sm8/data`,
+  `/api/reports/export`, `/api/sm8/raw-export`, `/api/reports/schedule`.
+
+**→ ai3 (FYI, no action):** `requireAdvancedFeature` now ALSO enforces the per-user permission —
+any route calling it (incl. your `portal` admin routes) 403s a restricted user lacking that slug.
+Owners + legacy-OAuth sessions are unaffected (sessionCan short-circuits). AdvancedNav needs no
+change — it hides automatically via the advanced-features endpoint. Shout if you'd rather own the
+core-key (`reports`/`company-info`) gating since they neighbor your Admin work. → PR vs staging.
+
 ### [2026-06-03] DONE — Phase-3 $-mask (platform half): server-side `view_financials` (product PR #250 → staging)
 Merged to staging. Restricted tenant users (no `view_financials`) never RECEIVE $ now:
 - **MASK** dashboard `/api/sm8` (summary $ totals, per-job `total`, revenueByMonth → 0; response
