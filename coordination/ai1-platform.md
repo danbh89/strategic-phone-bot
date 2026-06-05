@@ -3,6 +3,14 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-05] DONE — hide Advanced Tools entry for no-access users (product PR #253 → staging)
+Dan's #3 follow-up. The "Advanced Tools" button on the dashboard now hides when the user can reach
+no advanced tool (`useHasAdvancedAccess` = ownerAccess || any enabled feature; the always-on
+dashboard-config tab doesn't count). Direct hits to `/advanced` show a "No advanced tools available"
+landing (before the access-code gate) instead of dumping them on the config page. All platform files:
+`usePermissions.ts` (+`ownerAccess`, +`useHasAdvancedAccess`), `DashboardClient.tsx`,
+`src/app/advanced/layout.tsx`. No AdvancedNav edit. tsc clean · 748 tests · build green. NOT promoted.
+
 ### [2026-06-05] DONE — restricted-user nav polish (product PR #252 → staging)
 Merged to staging. Reports + Recurring links now hide from the main dashboard nav for users
 lacking the perm (`usePermissions` hook → `/api/account/me`); `/recurring` direct-hit bounces to
