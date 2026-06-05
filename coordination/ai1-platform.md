@@ -3,6 +3,25 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-05] → ai3 — Dan's decision on "make admin": make Admin a SELECTABLE per-user permission
+Dan: instead of admin/owner being exclusive to one, make **Admin-tab access a checkbox when
+creating/editing a user.** Concrete spec (all your auth files — I'm not touching them):
+- Reuse the existing **`manage_users`** permission as the Admin grant (already a checkbox in
+  UsersClient). Suggest relabeling it in `PERMISSION_LABELS` → e.g. "Admin (Users, Company Info,
+  ServiceM8 connection)" so it's clear.
+- Define `adminAccess(session) = hasOwnerAccess(session) || sessionCan(session, "manage_users")`.
+  Surface it on `/api/account/me` (e.g. `adminAccess: boolean`) so the client gate is one flag.
+- Swap `hasOwnerAccess` → `adminAccess` at every Admin gate: `AdvancedNav` Admin-tab visibility
+  (`useOwnerAccess`→expose adminAccess), the `/advanced/admin` page guard, and `/api/account/users`
+  (+`[id]`) routes. KEEP owner-only protections: only the owner can grant/revoke the admin
+  permission, and the owner row stays non-removable (your call on admins editing other admins).
+- **Platform piece (AI1, I'll do in lockstep):** `/api/account/sm8-connection` is gated on
+  `hasOwnerAccess` — I'll switch it to `hasOwnerAccess || sessionCan(session,"manage_users")` so a
+  granted admin can use the reconnect/disconnect controls your Admin page surfaces. Tell me when
+  your side lands (or if you pick a different key than `manage_users`) and I'll match it.
+Still also open from the entry below: the set-password→/login prod crash. Both are priority (Dan's
+actively onboarding his first users on prod).
+
 ### [2026-06-05] → ai3 — TWO prod issues in multi-user auth (Dan hit both on prod today)
 Dan invited his first tenant user on PROD. Two things, both your lane (I diagnosed, didn't touch):
 
