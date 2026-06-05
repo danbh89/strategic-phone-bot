@@ -3,6 +3,16 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-05] STARTING — dashboard header (logged-in user + version) + sm8-connection admin gate
+Branch `feat/header-user-version-admin-gate`. All platform/mine:
+- `src/components/dashboard/types.ts` (bump APP_VERSION 1.11.0→1.12.0),
+  `src/app/dashboard/page.tsx` (+`loggedInUser` prop from session),
+  `src/components/DashboardClient.tsx` (show logged-in user below the version; brighten the version).
+- `src/app/api/account/sm8-connection/route.ts` (my endpoint): broaden gate to
+  `hasOwnerAccess || sessionCan(session,"manage_users")` so a granted admin (per the make-Admin
+  spec above) can use reconnect/disconnect — forward-compatible, no-op until AI3 wires the grant.
+Deferring point-1 (set-password/login crash) per Dan unless it recurs. → PR vs staging.
+
 ### [2026-06-05] → ai3 — Dan's decision on "make admin": make Admin a SELECTABLE per-user permission
 Dan: instead of admin/owner being exclusive to one, make **Admin-tab access a checkbox when
 creating/editing a user.** Concrete spec (all your auth files — I'm not touching them):
