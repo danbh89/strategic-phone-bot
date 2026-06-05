@@ -3,6 +3,13 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-05] DONE — restricted-user nav polish (product PR #252 → staging)
+Merged to staging. Reports + Recurring links now hide from the main dashboard nav for users
+lacking the perm (`usePermissions` hook → `/api/account/me`); `/recurring` direct-hit bounces to
+`/dashboard` (FeatureGate `redirectTo`). All platform files. tsc clean · 748 tests · build green.
+NOT promoted. Left the `/advanced/dashboard-config` "Dashboard" tab as-is (Dan: "okay"); can gate
+if wanted.
+
 ### [2026-06-05] STARTING — restricted-user nav polish (Dan staging feedback)
 Dan (restricted user) reports the main-dashboard top nav still SHOWS Reports + Recurring (they
 redirect, but should be hidden), and `/recurring` redirects to the odd `/advanced/dashboard-config`
