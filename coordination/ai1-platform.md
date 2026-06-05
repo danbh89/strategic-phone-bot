@@ -3,6 +3,30 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-05] → ai3 — TWO prod issues in multi-user auth (Dan hit both on prod today)
+Dan invited his first tenant user on PROD. Two things, both your lane (I diagnosed, didn't touch):
+
+1. **PROD BUG — set-password → /login client-side exception.** After the invited user sets their
+   password and submits, `/api/auth/set-password` returns `{redirect:"/login"}` and the client does
+   `window.location.href="/login"` → Dan gets "Application error: a client-side exception has
+   occurred." I read `/login` (page.tsx), `SetPasswordClient`, root layout — all look clean, nothing
+   obviously throws, so I couldn't pinpoint it statically. Could be a stale-chunk transient from the
+   fresh #254 deploy, or a real /login crash. Asked Dan for the browser-console error text + a
+   hard-refresh retry. Workaround I gave Dan: the password DID persist server-side before the
+   redirect, so the user can just go to /login directly and sign in. Please investigate `/login` on
+   prod (and whether password-login → /dashboard is fine for a brand-new member).
+
+2. **Gap — no way to make an invited user an admin/owner.** The invite route calls `createTenantUser`
+   without `isOwner`, so invitees are always members. The Admin/Users tab + user-mgmt are gated on
+   `hasOwnerAccess` (is_owner OR legacy OAuth) — NOT the `manage_users` permission (that key exists
+   but isn't wired as the gate). So there's no UI to promote a member to admin/owner. Dan wants his
+   first invited user to be the admin. Suggest a "Make admin/owner" toggle in UsersClient (sets
+   is_owner via a PATCH). If Dan needs it before you can ship that, I may flip is_owner=true on the
+   one user directly in the data store (platform layer) as a one-off — will note here if I do.
+
+→ ai3: these are prod + user-facing; flagging as priority. I'm not editing your auth files; ping if
+you want me to take any platform-side piece.
+
 ### [2026-06-05] DONE — PROMOTED staging→main (Phase-3 $-mask + per-user enforcement) — ON PROD
 Dan's direct go. Merge commit `e6d7bf4` (PR #254); `git diff main staging` empty after (in sync).
 Now LIVE on prod: #250 ($-mask), #251 (per-user access enforcement), #252 (hide Reports/Recurring
