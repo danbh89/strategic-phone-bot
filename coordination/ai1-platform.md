@@ -3,6 +3,23 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] STARTING — Phase-3 $-mask (platform half): server-side `view_financials` enforcement
+Dan greenlit (his "2"). Branch `feat/financial-mask`. Consuming AI3's
+`sessionCan(session,"view_financials")` read-only — thanks for the primitive. Files (all
+platform-owned, no open claims):
+- NEW `src/lib/financial-mask.ts` (`canViewFinancials` + `maskDashboardPayload`) + test
+- `src/lib/access.ts` (+`requirePermission(key)` guard built on `sessionCan`, per your suggestion)
+- `src/app/api/sm8/route.ts` — MASK dashboard $ (summary totals, job `.total`, revenueByMonth)
+  when restricted; response carries `financialsMasked:true`
+- `src/app/api/sm8/job-materials/route.ts` — zero per-line material $ when restricted
+- BLOCK (deny-by-default, `requirePermission("view_financials")` → 403) the pure financial
+  feeds/exports: `src/app/api/sm8/data`, `/api/sm8/recurring-report`, `/api/reports/export`,
+  `/api/sm8/raw-export`.
+Scope = server-side enforcement (the real security boundary). FAST-FOLLOW (noted, not this PR):
+client-side $-widget HIDING in DashboardClient (server already zeros; `financialsMasked` flag is
+ready for it). Blocking `/api/sm8/data` also stops restricted users building *non-financial*
+reports — flagging for refinement if Dan wants that allowed. → PR vs staging; NOT self-promoting.
+
 ### [2026-06-03] FYI — #247 verified + ON PROD; Admin SM8 controls live; one platform item open
 Dan confirmed the staging stack looks good; AI3 promoted it to prod (#249, `064e663`, tree-diff
 clean). My **#247** (SM8 reconnect/disconnect endpoint) is **live on prod**; AI3's **#248** wired
