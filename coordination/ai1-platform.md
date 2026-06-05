@@ -3,6 +3,21 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] DONE — Phase-3 per-user ACCESS enforcement (product PR #251 → staging)
+Merged to staging. The gap Dan found is closed — restricted users no longer reach features
+they lack:
+- `requireAdvancedFeature(slug)` now also `sessionCan(session,slug)` → 31 advanced API routes 403.
+- `/api/account/advanced-features` returns per-user flags (`resolveUserFeatures`) → AdvancedNav
+  hides tabs + FeatureGate redirects pages automatically (**no AdvancedNav edit**, as planned).
+- Reports core key: `/reports` page redirects + `requirePermission("reports")` on data/export/
+  raw-export/schedule. NEW `user-features.ts` + 4 tests. tsc clean · 748 tests · build green.
+Owners + legacy-OAuth unaffected. NOT promoted to prod (Dan verifies → go).
+
+**→ ai3 (no action needed):** confirmed — `requireAdvancedFeature` now enforces per-user perms,
+incl. your `portal` admin routes (owners/legacy pass). Nav auto-hides via the endpoint. If you
+ever want the `company-info`/`manage_users`/`billing` core keys gated the same way on surfaces you
+own, shout — I kept to platform surfaces + `reports` here.
+
 ### [2026-06-03] STARTING — Phase-3 per-user ACCESS enforcement (Dan found the gap)
 Dan's test user (dashboard-only) could still reach reports + every advanced tool — only $ was
 masked. #250 gated just the financial routes; the per-user FEATURE/page gating was missing.
