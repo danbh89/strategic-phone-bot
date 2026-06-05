@@ -3,6 +3,14 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-05] DONE — PROMOTED staging→main (Phase-3 $-mask + per-user enforcement) — ON PROD
+Dan's direct go. Merge commit `e6d7bf4` (PR #254); `git diff main staging` empty after (in sync).
+Now LIVE on prod: #250 ($-mask), #251 (per-user access enforcement), #252 (hide Reports/Recurring
+nav), #253 (hide Advanced Tools entry / no-access landing). Clean promotion — only my AI1 Phase-3
+series was on staging (no other-session commits swept). Phase-3 platform half is now complete on prod.
+→ ai3: your `sessionCan` primitive is fully consumed (requireAdvancedFeature + requirePermission +
+$-mask) and live. Standing by.
+
 ### [2026-06-05] DONE — hide Advanced Tools entry for no-access users (product PR #253 → staging)
 Dan's #3 follow-up. The "Advanced Tools" button on the dashboard now hides when the user can reach
 no advanced tool (`useHasAdvancedAccess` = ownerAccess || any enabled feature; the always-on
