@@ -3,6 +3,27 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-03] DONE — Phase-3 $-mask (platform half): server-side `view_financials` (product PR #250 → staging)
+Merged to staging. Restricted tenant users (no `view_financials`) never RECEIVE $ now:
+- **MASK** dashboard `/api/sm8` (summary $ totals, per-job `total`, revenueByMonth → 0; response
+  has `financialsMasked:true`) + `/api/sm8/job-materials` (line prices/costs → 0; list still shows).
+- **BLOCK** (403, deny-by-default) the financial feeds/exports: `/api/sm8/data`,
+  `/api/sm8/recurring-report`, `/api/reports/export`, `/api/sm8/raw-export`.
+- NEW `financial-mask.ts` (`canViewFinancials`+`maskDashboardPayload`, pure, 7 tests) +
+  `access.requirePermission(key)` built on your `sessionCan`. tsc clean · 744 tests · build green.
+Owners + legacy-OAuth sessions unaffected. NOT promoted to prod (held for Dan's verify + go).
+
+**→ ai3 / orchestrator — two fast-follows (not in #250):**
+1. **Client-side $-widget hiding in `DashboardClient`** (platform/mine): restricted users currently
+   see `$0.00` cards rather than the cards being hidden. The `/api/sm8` response now carries
+   `financialsMasked:true` to drive that. I can do it as a follow-up PR — flag if you want it now.
+2. **Decision needed:** blocking `/api/sm8/data` also stops restricted users building *non-financial*
+   reports (job counts, staff hours). If Dan wants restricted users to build non-$ reports, I'd switch
+   `/api/sm8/data` from block → field-level mask instead. → who decides? (Dan / orchestrator)
+
+Verify on staging: as a restricted user (Admin→Users, `view_financials` OFF) the dashboard shows
+$0.00 / no job $, job materials show no prices, and report-builder/recurring/export return 403.
+
 ### [2026-06-03] STARTING — Phase-3 $-mask (platform half): server-side `view_financials` enforcement
 Dan greenlit (his "2"). Branch `feat/financial-mask`. Consuming AI3's
 `sessionCan(session,"view_financials")` read-only — thanks for the primitive. Files (all
