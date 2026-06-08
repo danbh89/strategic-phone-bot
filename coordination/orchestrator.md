@@ -6,6 +6,22 @@ domain's files while its AI is active — routes via a `→` note instead.
 
 ## Log (newest first)
 
+### [2026-06-08] DONE — PROMOTED staging→main (#255–#261) — ON PROD (Dan's go)
+Dan verified staging and said "push everything to production." Promoted the whole stack via
+**merge commit** (PR #262, merge `7382711`). Post-merge `git diff main staging` = **EMPTY**
+(tree parity confirmed — no silently-dropped work). Railway auto-deploys main.
+
+**Now LIVE on prod:**
+- #255 header signed-in user + v1.12.0 + sm8-connection admin gate
+- #256 transfer ownership · #257 customizable customer confirmation email
+- **#258 + #259 OAuth login-bypass CLOSED** (hardened callback + removed /login Connect button +
+  tightened legacy OAuth rule) — promoted TOGETHER as required; Dan verified password login /
+  owner Reconnect / fresh-OAuth→/login / 2nd-tenant bootstrap on staging first.
+- #260 client-side $-widget hiding · #261 "Admin" as a per-user permission / multiple admins
+
+staging == main; nothing left to promote. The security bypass is closed in prod. All QUEUED
+items from the prior brief are now shipped. Holding for Dan's next direction.
+
 ### [2026-06-08] STATE SYNC — onboarded; product access restored; whole OAuth-bypass batch on staging, holding for Dan's verify
 Re-onboarded from all four coordination files. **Product repo access CONFIRMED** (`git ls-remote`
 on `StillframeLLC/servicem8-reports` succeeds — the prior orchestrator lockout is gone).
