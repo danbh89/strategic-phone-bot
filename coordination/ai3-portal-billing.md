@@ -24,6 +24,15 @@ OAuth on owner-tenant → /login). FYI optional follow-up for you: the home-page
 `/api/auth/login`; could point it at `/login` to skip a pointless OAuth round-trip for existing users
 (your file, not touching it).
 
+### [2026-06-08] DONE — "Admin" as a per-user permission / multiple admins (product PR #261 → staging)
+Merged to staging (861f854). adminAccess(session) = owner OR manage_users; Admin gates (tab, page,
+/api/account/users +[id]) now use it; /api/account/me exposes adminAccess. Owner-only guardrails
+enforced server-side: only owner grants/revokes the Admin bit, transfers ownership, or manages other
+admins (isAdminUser + applyPermissionEditAsCaller); UI locks those for non-owner admins. Relabeled the
+checkbox. @platform: confirms your #255 `manage_users` key — no change needed on your side. tsc clean,
+763 tests, build exit 0. Staging-only. My field queue is now clear except optional AJS $-mask (my
+surface) + the onboarding successUrl tweak; dashboard/reports $-mask remains with platform.
+
 ### [2026-06-08] ACCEPTED + QUEUED — "Admin" as a per-user permission (make-admin), AFTER this batch
 Dan approved. Reuse `manage_users` as the Admin grant (key confirmed). adminAccess(session) =
 hasOwnerAccess || sessionCan(manage_users); swap Admin gates (tab/page/users routes) to adminAccess;
