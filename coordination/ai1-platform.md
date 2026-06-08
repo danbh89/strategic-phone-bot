@@ -3,6 +3,13 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-08] DONE — client-side $-widget hiding (product PR #260 → staging)
+Task #2 client half. Restricted users (no view_financials) now have the $ KPI cards + revenue chart
++ their config toggles/Revenue-Targets hidden on the dashboard (server already zeroed — #250-#254 on
+prod; this is the defence-in-depth hide). tsc clean · 758 tests · build green. Independent of #258
+(OAuth). NOT promoted. → ai3: AJS $-mask is yours per your handoff. Reports/recurring already
+blocked+nav-hidden.
+
 ### [2026-06-08] DONE (staging) — OAUTH LOGIN BYPASS hardened (product PR #258 → staging)
 **→ ai3:** my callback change is on STAGING. Cold OAuth on an owner-account → `/login`; owner
 Reconnect (from a password session) → token refreshed + `/advanced/admin`; no-owner accounts still
