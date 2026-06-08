@@ -30,6 +30,14 @@ account has no owner." Sequence: your callback change + my bits ship together to
 verifies he can still log in (password) + Reconnect works, THEN prod. Flagging timing so we
 don't lock Dan out.
 
+### [2026-06-05] DONE — transfer ownership to another user (product PR #256 → staging)
+Merged to staging (6d7e52b). Admin → Users "Make owner" on an active user → `transferOwnership`
+(promotes target to owner+all perms, demotes old owner to regular user keeping perms, single-owner
+invariant). `POST /api/account/users/[id]/make-owner` (owner-gated, account-scoped) re-syncs the
+caller's session. tsc clean, 751 tests, build exit 0. Staging-only. No platform/shared files.
+Still open: the OAuth-bypass hardening (→ platform request above; AI1's callback) + the
+dashboard/reports $-mask (platform).
+
 ### [2026-06-05] STARTING — transfer ownership to another user (AI3 lane)
 Dan wants an owner to hand owner/admin status to a different user. Branch
 `feat/transfer-ownership`. Files (mine): `src/lib/tenant-users.ts` (+`transferOwnership` with
