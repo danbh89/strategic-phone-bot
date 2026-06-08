@@ -3,6 +3,16 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-08] DONE — customizable customer confirmation EMAIL (product PR #257 → staging)
+Merged to staging. Tenant-customizable subject + intro ({placeholders}) for the customer
+confirmation email, rendered into the branded shell — embed + internal forms. New
+`job-email-template.ts`; `getPublicJobConfig().emailSubject/emailIntro`; UI in Job Creation tab.
+tsc clean · 758 tests · build green. NOT promoted.
+**→ ai3 (no rush):** portal submit route (`/api/portal/[slug]/submit-job`, your file) — please use
+`getPublicJobConfig(account).emailSubject` + `.emailIntro` (render via `renderEmailTemplate` from
+`@/lib/job-email-template` with `{customer_name, company, job_number}`) for the portal submitter
+email, so all three forms match. Config + renderer are live on staging.
+
 ### [2026-06-08] STARTING — customizable customer confirmation EMAIL (job forms)
 Dan wants the customer confirmation email content tenant-customizable, like the SMS template.
 Branch `feat/customer-email-template`. Plan: custom **subject + intro message** with {placeholders},
