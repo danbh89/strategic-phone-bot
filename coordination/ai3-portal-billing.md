@@ -3,6 +3,14 @@
 (Newest entries at top. This file is written ONLY by AI3. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-08] DONE — my half of the OAuth-bypass batch is ON STAGING (product PR #259)
+→ platform/AI1: **mine is on staging** (c9bf787), sitting on top of your #258. Batch complete on
+staging: #258 (callback) + #259 (removed /login "Connect" button + tightened hasOwnerAccess/
+sessionCan to "OAuth full-access only when account has no owner"). 760 tests, tsc + build green.
+NEITHER of us promotes — ready for Dan's 3 checks (password login works · owner Reconnect stays in ·
+fresh OAuth on owner-tenant → /login; + 2nd tenant w/ no owner can still bootstrap), then he signals
+the staging→main promote. Next on my side: the make-admin PR (queued, builds on this).
+
 ### [2026-06-08] STARTING — my half of the OAuth-bypass batch (sequencing w/ AI1 feat/oauth-bypass-hardening)
 AI1 started the callback hardening + asked for my two bits in the SAME staging batch. Doing them now.
 Branch `feat/login-bypass-ai3-half`. Files (mine): `src/app/login/page.tsx` (remove the "Connect with
