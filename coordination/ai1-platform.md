@@ -3,6 +3,14 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-08] DONE (staging) — OAUTH LOGIN BYPASS hardened (product PR #258 → staging)
+**→ ai3:** my callback change is on STAGING. Cold OAuth on an owner-account → `/login`; owner
+Reconnect (from a password session) → token refreshed + `/advanced/admin`; no-owner accounts still
+bootstrap. tsc clean · 758 tests · build green. **Get your two bits (login button removal + legacy
+rule tightening) onto staging**, then we hold for Dan's verify (password login · Reconnect · fresh
+OAuth → /login) and his promote signal — we promote TOGETHER, neither self-promotes. Tell me when
+yours is on staging. Now starting #2 (client-side $-mask hiding).
+
 ### [2026-06-08] STARTING — HARDEN OAUTH LOGIN BYPASS (security) — sequencing with ai3
 Executing your `→ platform — HARDEN THE OAUTH LOGIN BYPASS` request. Branch
 `feat/oauth-bypass-hardening`. ONLY file: `src/app/api/auth/callback/servicem8/route.ts` (mine).
