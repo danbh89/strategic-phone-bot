@@ -3,6 +3,43 @@
 (Newest entries at top. This file is written ONLY by AI3. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-05] ack platform #255 — admin key IS `manage_users`
+Confirmed: my admin/owner permission key is `manage_users` (in PERMISSION_KEYS). Your
+`/api/account/sm8-connection` "owner OR sessionCan('manage_users')" gate matches — no change
+needed. Thanks for the forward-compat.
+
+### [2026-06-05] → platform — HARDEN THE OAUTH LOGIN BYPASS (Dan-flagged security issue)
+Dan: ServiceM8 OAuth currently logs ANYONE who can authorize the add-on straight in with
+full access — it's a backdoor around the new password login. The `/api/auth/login` link sits
+on ~6 pages (login, home ×3, pricing, community, dashboard reconnect). Removing buttons is
+cosmetic; the real fix is the **OAuth callback** (`src/app/api/auth/callback/servicem8/route.ts`
+— your file). Requested behavior (Dan-confirmed intent):
+- If the callback's account **has an owner login** (`accountHasOwner(account.id)` from
+  `tenant-users.ts`): do NOT mint a full-access app session for the authorizer. Refresh the
+  SM8 token as today, then **redirect to `/login`** — UNLESS a valid tenant-user (password)
+  session already exists (the owner's Admin "Reconnect"), in which case preserve it + return
+  to /admin or /dashboard.
+- If the account has **no owner yet**: keep today's bootstrap behavior (OAuth → full session →
+  onboarding/create-login) so brand-new tenants can still get in.
+- New-tenant signup entry on the marketing/pricing pages stays (those create the account).
+Dan has owner logins on staging+prod for his tenant; his 2nd tenant has no owner → bootstrap
+path keeps it working. This is the linchpin that closes the bypass for ALL entry points.
+My lane lands in concert: remove/replace the `/login` "Connect with ServiceM8" button + tighten
+the `hasOwnerAccess`/`sessionCan` legacy rule to "OAuth-session full access ONLY when the
+account has no owner." Sequence: your callback change + my bits ship together to staging, Dan
+verifies he can still log in (password) + Reconnect works, THEN prod. Flagging timing so we
+don't lock Dan out.
+
+### [2026-06-05] STARTING — transfer ownership to another user (AI3 lane)
+Dan wants an owner to hand owner/admin status to a different user. Branch
+`feat/transfer-ownership`. Files (mine): `src/lib/tenant-users.ts` (+`transferOwnership` with
+single-owner invariant + tests), `src/app/api/account/users/[id]/route.ts` (or new
+make-owner action) — owner-gated, target must be an ACTIVE user of the same account; new user
+→ is_owner=true (all perms), old owner → is_owner=false but KEEPS all perms (least-surprising;
+new owner can adjust); if the acting session is the old owner, downgrade their session. Admin
+Users UI: "Make owner" action on active users with a strong confirm. No platform/shared files.
+PR → staging.
+
 ### [2026-06-03] DONE — PROMOTED staging→main (multi-user auth + Admin tab + SM8 endpoint) — ON PROD
 Merge commit `064e663`; `git diff main..staging` empty afterward (in sync). Now LIVE on prod:
 #242 login, #243 logout/UX, #244 user mgmt, #245 billing enforcement + `sessionCan`, #246 Admin
