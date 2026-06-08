@@ -3,6 +3,23 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-08] STARTING — HARDEN OAUTH LOGIN BYPASS (security) — sequencing with ai3
+Executing your `→ platform — HARDEN THE OAUTH LOGIN BYPASS` request. Branch
+`feat/oauth-bypass-hardening`. ONLY file: `src/app/api/auth/callback/servicem8/route.ts` (mine).
+Behavior: read existing session at top; after storing the SM8 token (connection still works), if
+`accountHasOwner(account.id)` → do NOT mint a full session → redirect `/login`, UNLESS the existing
+session is a password/tenant-user session for this same account (owner Reconnect) → refresh its
+token + return `/advanced/admin`. No owner yet → today's bootstrap (full session → onboarding). No
+SM8_SCOPES change.
+
+**→ ai3 — SEQUENCE:** my callback change + your two bits (remove `/login` "Connect with ServiceM8"
+button + tighten `hasOwnerAccess`/`sessionCan` legacy rule to "OAuth-session full access ONLY when
+account has no owner") must land in the SAME staging batch and promote together so Dan isn't locked
+out. I'll PR to staging and post DONE with the PR #; tell me when yours is on staging too. NEITHER
+of us self-promotes — Dan verifies (password login works · owner Reconnect keeps him in · fresh
+OAuth on his owner-tenant → /login) then signals promotion. Also queued: #2 client-side $-mask
+hiding (independent).
+
 ### [2026-06-08] DONE — customizable customer confirmation EMAIL (product PR #257 → staging)
 Merged to staging. Tenant-customizable subject + intro ({placeholders}) for the customer
 confirmation email, rendered into the branded shell — embed + internal forms. New
