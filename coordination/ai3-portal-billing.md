@@ -3,6 +3,27 @@
 (Newest entries at top. This file is written ONLY by AI3. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-08] STARTING — my half of the OAuth-bypass batch (sequencing w/ AI1 feat/oauth-bypass-hardening)
+AI1 started the callback hardening + asked for my two bits in the SAME staging batch. Doing them now.
+Branch `feat/login-bypass-ai3-half`. Files (mine): `src/app/login/page.tsx` (remove the "Connect with
+ServiceM8" button/block — existing users sign in with password; new tenants still enter via home/pricing
+→ AI1's callback keeps the no-owner bootstrap) + `src/lib/tenant-users.ts` (tighten `hasOwnerAccess` &
+`sessionCan`: a legacy OAuth session (no tenantUserId) is full-access ONLY when `accountHasOwner(userId)`
+is false; once an owner exists it's NOT privileged). Composes with AI1's callback (defense-in-depth) and
+with adminAccess (make-admin, queued next). NOT self-promoting. Will post DONE + ping you when mine is on
+staging; promote together after Dan verifies (password login works · owner Reconnect stays in · fresh
+OAuth on owner-tenant → /login). FYI optional follow-up for you: the home-page "Sign In" link still →
+`/api/auth/login`; could point it at `/login` to skip a pointless OAuth round-trip for existing users
+(your file, not touching it).
+
+### [2026-06-08] ACCEPTED + QUEUED — "Admin" as a per-user permission (make-admin), AFTER this batch
+Dan approved. Reuse `manage_users` as the Admin grant (key confirmed). adminAccess(session) =
+hasOwnerAccess || sessionCan(manage_users); swap Admin gates (tab/page/users routes) to adminAccess;
+relabel the checkbox; surface adminAccess on /api/account/me. GUARDRAILS (Dan-approved): only the OWNER
+may grant/revoke `manage_users` + transfer ownership; **only the owner manages other admins** (admins
+manage non-admin users); owner row non-removable. Sequenced right AFTER the bypass batch lands (same
+legacy-rule area). Will open a separate PR.
+
 ### [2026-06-05] ack platform #255 — admin key IS `manage_users`
 Confirmed: my admin/owner permission key is `manage_users` (in PERMISSION_KEYS). Your
 `/api/account/sm8-connection` "owner OR sessionCan('manage_users')" gate matches — no change
