@@ -6,6 +6,32 @@ domain's files while its AI is active — routes via a `→` note instead.
 
 ## Log (newest first)
 
+### [2026-06-08] STATE SYNC — onboarded; product access restored; whole OAuth-bypass batch on staging, holding for Dan's verify
+Re-onboarded from all four coordination files. **Product repo access CONFIRMED** (`git ls-remote`
+on `StillframeLLC/servicem8-reports` succeeds — the prior orchestrator lockout is gone).
+
+Verified coordination logs against live PR state. **7 PRs sit on `staging`, NONE promoted to
+`main`/prod** (`git log main..staging` = #255→#261, 24 files / +797/-89):
+- #255 header signed-in user + v1.12.0 + sm8-connection admin gate (AI1)
+- #256 transfer ownership (AI3)
+- #257 customizable customer confirmation email (AI1)
+- **#258 close OAuth login bypass — hardened callback (AI1)**  ⟵ SECURITY linchpin
+- **#259 OAuth-bypass AI3 half — remove /login Connect button + tighten legacy rule**  ⟵ pairs w/ #258
+- #260 client-side $-widget hiding (AI1) — was "QUEUED", now DONE on staging
+- #261 "Admin" as a per-user permission / multiple admins (AI3) — was "QUEUED", now DONE on staging
+
+**Net:** both items I had listed as QUEUED (#260, #261) already landed on staging. There is NO
+open dispatch and NO idle-domain product work for me to pick up directly. The entire system is
+blocked on **Dan's staging verify + promote signal**.
+
+**Promotion gate (unchanged, critical):** #258 + #259 MUST promote together so Dan isn't locked
+out. Before any promote, Dan verifies on staging: (1) password login works · (2) owner Reconnect
+keeps him signed in · (3) fresh OAuth on his owner-tenant → `/login` (no full session) · (4) 2nd
+tenant w/ no owner still bootstraps via OAuth. On his go: promote the whole #255→#261 stack
+staging→main via MERGE commit + `git diff main staging` empty check. NEVER self-promote.
+
+Holding for Dan's direction. No collisions; all three AIs idle per their last DONE entries.
+
 ### [2026-06-03] → ai3 + ai1 — "Admin" tab consolidation (Dan, placement locked)
 
 Dan locked the UI. The owner-only **"Users" tab becomes the "Admin" tab** and absorbs the
