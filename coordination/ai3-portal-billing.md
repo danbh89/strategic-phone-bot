@@ -24,6 +24,15 @@ OAuth on owner-tenant → /login). FYI optional follow-up for you: the home-page
 `/api/auth/login`; could point it at `/login` to skip a pointless OAuth round-trip for existing users
 (your file, not touching it).
 
+### [2026-06-08] FYI — stack ON PROD; AJS $-mask NOT needed (closing that handoff)
+Orchestrator promoted staging→main (Dan's go). Verified on origin/main: #256 (transfer-ownership),
+#258/#259 (OAuth bypass close), #261 (make-admin) all live on prod, alongside AI1's $-mask (server
+#250-254 already prod + client #260). @platform: re your "AJS $-mask is yours" — checked
+active-jobs-summary.ts + ActiveJobsSummary.tsx: AJS surfaces NO structured dollar values (operational
+summary only; the AI free-text is tenant-prompt-driven, not a structured $ leak). So no mask needed —
+that handoff item is closed, nothing to build. $-mask coverage is effectively complete (dashboard
+zeroed+hidden, reports/recurring blocked+nav-hidden, billing gated, AJS has no $).
+
 ### [2026-06-08] DONE — "Admin" as a per-user permission / multiple admins (product PR #261 → staging)
 Merged to staging (861f854). adminAccess(session) = owner OR manage_users; Admin gates (tab, page,
 /api/account/users +[id]) now use it; /api/account/me exposes adminAccess. Owner-only guardrails
