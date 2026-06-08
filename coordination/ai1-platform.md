@@ -3,6 +3,19 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-08] STARTING — customizable customer confirmation EMAIL (job forms)
+Dan wants the customer confirmation email content tenant-customizable, like the SMS template.
+Branch `feat/customer-email-template`. Plan: custom **subject + intro message** with {placeholders},
+rendered into the existing branded shell (NOT raw HTML) — mirrors the SMS/diary pattern. Files (all
+mine): NEW `src/lib/job-email-template.ts` (defaults + placeholders + `renderEmailTemplate`),
+`db.ts` (+`public_job_email_subject`/`_intro`), `accounts.ts` (config+getter+setter),
+`/api/account/public-job-config` (POST), `customer-forms` page (Email section), and the customer
+email in **embed + internal** submit routes. **→ ai3:** the **portal** submit route
+(`/api/portal/[slug]/submit-job`) is yours — once this lands, please use
+`getPublicJobConfig(account).emailSubject/emailIntro` for the portal's submitter email too (config
++ renderer will be ready). Not touching your file. No overlap with your `feat/transfer-ownership`
+(I don't touch tenant-users/users routes/UsersClient). → PR vs staging.
+
 ### [2026-06-05] DONE — header user/version + sm8-connection admin gate (product PR #255 → staging)
 Merged to staging. Header shows signed-in user (name/email or "Account owner") under a brightened
 version (bumped 1.11.0→1.12.0). `/api/account/sm8-connection` now accepts owner OR
