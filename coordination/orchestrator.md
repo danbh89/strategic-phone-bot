@@ -6,6 +6,15 @@ domain's files while its AI is active — routes via a `→` note instead.
 
 ## Log (newest first)
 
+### [2026-06-08] DONE — American-spelling sweep (product PR #264 → staging)
+Prose-only British→American sweep: **168 word changes across 68 files**. Comment-scoped script
+(only //, *, /* lines) + ~20 explicit UI-string fixes. Identifiers + external contracts (SM8
+"Cancelled", Stripe "canceled", OAuth scopes, "not-authorised" error code, SM8-quoted
+'not an authorised object type', {colour} test fixture) deliberately untouched. tsc clean · 763
+tests · build green. Staging-only, NOT self-promoting (cosmetic; Dan can fold into the next
+promote or take alone). PR #264 (draft). AI1's shared `accounts.ts` touched only for the 2-word
+default-agreement prose "authorise"→"authorize".
+
 ### [2026-06-08] STARTING — American-spelling sweep (orchestrator direct; cross-cutting, prose-only)
 Dan asked to convert English/Australian spellings → American across the platform (he spotted an
 "authorise" with an s). Cross-domain cosmetic sweep; all three AIs idle, no single owner → I'm
