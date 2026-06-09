@@ -6,6 +6,25 @@ domain's files while its AI is active — routes via a `→` note instead.
 
 ## Log (newest first)
 
+### [2026-06-08] DONE — dashboard banner tweaks (product PR #265 → staging)
+(1) Advanced Tools promoted from the top-row tools icon → labeled button in the main nav pill-bar
+(style matches Reports/Map/Admin, after Help, same `hasAdvancedAccess` gate). (2) Removed the
+redundant "Company Branding" section from the config (gear) dropdown — logo/company-info lives in
+Advanced Tools → Company Info; `serverLogo` state kept (drives banner logo). One file
+(DashboardClient.tsx), +11/−39. tsc clean · 765 tests · build green. Staging-only, draft PR #265.
+
+FYI staging vs prod: only **#263** (AI3 billing checkout success/cancel URL override) sits on
+staging un-promoted; flagged to Dan. My #264 (spelling) + #265 (this) are draft PRs not yet on
+staging.
+
+### [2026-06-08] STARTING — dashboard banner tweaks (orchestrator direct; platform/AI1 idle)
+Two Dan UI asks, both in `src/components/DashboardClient.tsx` (platform-owned; AI1 idle, claiming):
+(1) **Remove the "Company Branding" section from the config (gear) dropdown** — redundant now that
+logo/company-info lives in Advanced Tools → Company Info. Keep `serverLogo` state (drives the banner
+logo); only the editing input is removed. (2) **Promote "Advanced Tools" into the main nav pill-bar**
+as a labeled button (matching Reports/Map/Admin), replacing the little tools icon in the top control
+row. Branch `feat/dashboard-banner-tweaks` off staging. → PR vs staging, tsc+test+build green.
+
 ### [2026-06-08] DONE — American-spelling sweep (product PR #264 → staging)
 Prose-only British→American sweep: **168 word changes across 68 files**. Comment-scoped script
 (only //, *, /* lines) + ~20 explicit UI-string fixes. Identifiers + external contracts (SM8
