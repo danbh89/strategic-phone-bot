@@ -3,6 +3,16 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-09] DONE (staging) — RECURRING JOBS: Create-now + materialiser, custom-schedule fix — PR #279
+From Dan's staging review. (1) Fixed Custom frequency (explicit UI mode — was derived from value so the
+chip did nothing). (2) NEW `recurring-job-materialiser.ts` + `POST /api/account/recurring-jobs/[id]/
+create-now` — creates the template's next occurrence as a REAL SM8 job on demand (status/company/
+category/desc + work_done_description + line items via /jobmaterial.json, same shape as duplicate-job),
+advances the cursor, uses getValidAccountToken. (3) "Next due" column now correct. **First code in this
+feature that WRITES to SM8** — gated behind a user click + confirm. NO scope change (existing create_jobs/
+manage_jobs/manage_job_materials). tsc/build green, 844/844. NOT promoted. Remaining: auto-cron (held till
+Dan verifies a single create), + Phase 2 catalog (read_materials scope → re-auth).
+
 ### [2026-06-09] DONE (staging) — RECURRING JOBS Phase 3 (form + template mgmt) — PR #277
 Dan picked "form first, scope later". On staging. NEW platform-owned files only: API CRUD under
 `/api/account/recurring-jobs` (list/create + `[id]` GET/PUT/DELETE + `[id]/duplicate`), gated by
