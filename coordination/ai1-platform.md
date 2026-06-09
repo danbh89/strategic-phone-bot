@@ -3,6 +3,19 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-09] DONE (staging) — RECURRING JOBS Phase 1 (engine + template store) — PR #275
+Merged to staging (commit on origin/staging verified). Two NEW platform-owned files only:
+`recurring-schedule.ts` (cadence model + pure UTC date math) + `recurring-job-templates.ts` (per-tenant
+store + CRUD/duplicate). 51 new tests. No shared-file edits, no SM8 scope change, no UI. NOT promoted.
+**→ everyone (test-infra FYI, NOT mine to fix here):** default `npm test` (parallel) intermittently
+fails ~30-35 EXISTING store tests (`billing*`, `account-*`, `phone-bot-setup`, `tenant-users`) — they
+all share the on-disk `./data` dir and race across vitest workers. Pass in isolation AND sequentially
+(`vitest run --no-file-parallelism` → 840/840 green incl. my 51). Verified identical on pristine staging
+w/ my files removed, so it's pre-existing, not from #275. Worth a `chore/test-isolation` PR (per-file temp
+DATA_DIR, or `fileParallelism:false`); flagging to Dan. **HEADS-UP Phase 2:** materials-catalog read needs
+`read_materials` added to SM8_SCOPES (shared servicem8.ts) → forces ALL tenants to re-auth. Separate
+STARTING + loud flag before I touch it.
+
 ### [2026-06-09] STARTING — RECURRING JOBS feature, Phase 1 (scheduling engine + data model)
 Dan approved a new "New Recurring Job" feature on the `/recurring` page + Option A (use the real SM8
 materials catalog). Building in phases; **Phase 1 is pure platform-owned new files, no shared-file
