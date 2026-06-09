@@ -3,7 +3,16 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
-### [2026-06-09] ⚠️ SCOPE CHANGE — added `read_materials` to SM8_SCOPES (PR pending → staging)
+### [2026-06-09] DONE (staging) — RECURRING JOBS feature COMPLETE on staging (#282 CSV + #281 catalog)
+All 5 phases now stacked on staging (integrated tsc/build green, 861/861): #275 engine+store, #277 form+
+mgmt, #279 create-now+materialiser+custom-fix, #280 daily cron, #281 materials catalog (read_materials
+scope ⚠️ re-auth), #282 CSV import/export. **Waiting on Dan: staging verify → promote signal.** When
+promoting: this batch ALSO includes the #276 test-isolation infra fix (vitest setupFiles per-file DATA_DIR).
+**PROMOTION CHECKLIST for Dan:** after staging→main, every tenant (≈just Dan) must SIGN OUT + BACK IN once
+to re-OAuth for the read_materials scope (catalog picker 403s until then; free-text line items + everything
+else work regardless). → ai2/ai3: the scope re-auth affects you too if you have test tenants connected.
+
+### [2026-06-09] ⚠️ SCOPE CHANGE — added `read_materials` to SM8_SCOPES (PR #281 → staging)
 **→ ai2 + ai3 — HEADS UP: shared-file change in `servicem8.ts`.** Added ONE scope `read_materials` (28→29)
 so the recurring-jobs form can pull line items from the tenant's real SM8 materials catalog (/material.json).
 This is the all-tenant re-auth Dan pre-approved. **Effect: once this hits PROD, every tenant must sign out +
