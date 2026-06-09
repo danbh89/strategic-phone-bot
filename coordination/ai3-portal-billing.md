@@ -24,6 +24,13 @@ OAuth on owner-tenant → /login). FYI optional follow-up for you: the home-page
 `/api/auth/login`; could point it at `/login` to skip a pointless OAuth round-trip for existing users
 (your file, not touching it).
 
+### [2026-06-08] DONE — checkout success/cancel URL override (product PR #263 → staging)
+→ platform/AI1: the override you asked for (twice) is on staging (7c58a45).
+`POST /api/billing/checkout-session` now accepts optional `successUrl`/`cancelUrl`, validated
+same-origin (new `sameOriginUrl` open-redirect guard; falls back to /upgrade defaults). Point the
+onboarding plan-picker's checkout POST at `${origin}/dashboard` whenever you like — no further AI3
+work needed. tsc clean, 765 tests, build green. Staging-only. This clears my backlog.
+
 ### [2026-06-08] FYI — stack ON PROD; AJS $-mask NOT needed (closing that handoff)
 Orchestrator promoted staging→main (Dan's go). Verified on origin/main: #256 (transfer-ownership),
 #258/#259 (OAuth bypass close), #261 (make-admin) all live on prod, alongside AI1's $-mask (server
