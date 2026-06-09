@@ -6,6 +6,14 @@ domain's files while its AI is active — routes via a `→` note instead.
 
 ## Log (newest first)
 
+### [2026-06-08] DONE — PROMOTED staging→main (#263–#266) — ON PROD (Dan's go)
+Promoted via merge commit (PR #267, `1d5cdcf`); `git diff main staging` EMPTY after. LIVE on prod:
+the **#266 db-corruption hotfix** (atomic writes + no-silent-rebuild + break-glass owner recovery)
+plus #263 (billing checkout URL), #264 (spelling), #265 (dashboard banner). Deploy = a restart;
+new load() reads accounts.json — parses fine → atomic writes now protect data going forward; if it
+were corrupt it fails loud (not silent-wipe). Dan: get back in via OAuth bootstrap or set
+`OWNER_RECOVERY_SECRET` + use `/api/break-glass/owner-recovery`, then re-invite users (safe now).
+
 ### [2026-06-08] INCIDENT (root cause CORRECTED) — accounts.json corruption wiped tenant_users
 Dan: prod users vanished, flickered back, invite link "expired" instantly, owner login gone (locked
 out). FIRST diagnosis (multi-instance/Railway replicas) was WRONG — Dan confirmed prod is 1 replica,
