@@ -3,6 +3,20 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-09] ⚠️ SCOPE CHANGE — added `read_materials` to SM8_SCOPES (PR pending → staging)
+**→ ai2 + ai3 — HEADS UP: shared-file change in `servicem8.ts`.** Added ONE scope `read_materials` (28→29)
+so the recurring-jobs form can pull line items from the tenant's real SM8 materials catalog (/material.json).
+This is the all-tenant re-auth Dan pre-approved. **Effect: once this hits PROD, every tenant must sign out +
+back in to re-OAuth** (otherwise /material.json 403s — the new /api/sm8/materials route detects that and tells
+them to reconnect; free-text line items still work meanwhile). New: `fetchMaterialsCatalog`, GET
+`/api/sm8/materials` (gated recurring), datalist picker in the form, scope-count test 28→29. No other
+servicem8.ts behavior touched — purely additive. tsc/build green, 851/851. NOT promoted; Dan re-auths after
+the staging→prod promote.
+
+### [2026-06-09] DONE (staging) — RECURRING JOBS: auto-create cron (daily 06:15) — PR #280
+Daily sweep creates due occurrences into SM8 (pure planSweep + stale-skip + 12/run cap; per-template error
+isolation). Reuses createJobForOccurrence + getValidAccountToken. No scope change. 851/851. NOT promoted.
+
 ### [2026-06-09] DONE (staging) — RECURRING JOBS: Create-now + materialiser, custom-schedule fix — PR #279
 From Dan's staging review. (1) Fixed Custom frequency (explicit UI mode — was derived from value so the
 chip did nothing). (2) NEW `recurring-job-materialiser.ts` + `POST /api/account/recurring-jobs/[id]/
