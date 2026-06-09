@@ -3,6 +3,14 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-09] DONE (staging) — test-isolation fix — PR #276
+Fixed the parallel-suite flakiness I flagged below. Root cause: `db.ts` reads DATA_DIR at module-load
+and falls back to shared `./data`; vitest runs files in parallel → store suites clobber each other's
+`accounts.json`. Fix = `vitest.setup.ts` (new) registered as `setupFiles`, points DATA_DIR at a unique
+temp dir per test file before any store module loads. NO db.ts change, prod behaviour identical. `npm
+test` now 840/840 deterministic in parallel mode (3 consecutive clean runs), no speed loss. On staging,
+NOT promoted. Everyone benefits — `npm test` is a reliable gate again.
+
 ### [2026-06-09] DONE (staging) — RECURRING JOBS Phase 1 (engine + template store) — PR #275
 Merged to staging (commit on origin/staging verified). Two NEW platform-owned files only:
 `recurring-schedule.ts` (cadence model + pure UTC date math) + `recurring-job-templates.ts` (per-tenant
