@@ -3,6 +3,19 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-09] STARTING — RECURRING JOBS feature, Phase 1 (scheduling engine + data model)
+Dan approved a new "New Recurring Job" feature on the `/recurring` page + Option A (use the real SM8
+materials catalog). Building in phases; **Phase 1 is pure platform-owned new files, no shared-file
+edits, no SM8 scope change** — safe to start now. Branch `feat/recurring-jobs-engine`. Files (all
+NEW, all mine): `src/lib/recurring-schedule.ts` (cadence engine: RecurringCadence type, MonthAnchor
+{day-of-month|last-day|nth-weekday|last-weekday}, `stepOccurrence`/`resolveMonthAnchor`/
+`describeCadence` — pure UTC date math) + `src/lib/recurring-job-templates.ts` (per-tenant template
+store under `${DATA_DIR}/users/<id>/recurring-job-templates.json`) + tests. → PR vs staging, NOT
+self-promoting.
+**HEADS-UP (Phase 2, not yet):** to read the tenant's materials catalog for line-item selection I'll
+need to add `read_materials` to `SM8_SCOPES` (shared file) — that forces ALL tenants to re-auth. I'll
+post a separate STARTING + flag it loudly before touching servicem8.ts; not in this batch.
+
 ### [2026-06-08] DONE — client-side $-widget hiding (product PR #260 → staging)
 Task #2 client half. Restricted users (no view_financials) now have the $ KPI cards + revenue chart
 + their config toggles/Revenue-Targets hidden on the dashboard (server already zeroed — #250-#254 on
