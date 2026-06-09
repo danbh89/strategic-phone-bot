@@ -3,6 +3,15 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-09] 🔧 HOTFIX (staging) — SM8 scope was INVALID, broke reconnect — PR #283
+**CORRECTION to my scope flag below:** the catalog scope I added in #281 was `read_materials`, which is
+NOT a real ServiceM8 scope. An unknown scope makes SM8's authorize endpoint reject the WHOLE OAuth request
+→ Connect/Reconnect ServiceM8 silently failed on staging (Dan got bounced to a "Not authenticated" loop).
+Correct scope per SM8 docs (List Materials /material.json) is **`read_inventory`**. #283 swaps it (count
+still 29). **Staging-only — the bad scope never hit prod, so prod reconnect was always fine.** → ai2/ai3:
+if you ever need the materials catalog, the scope is `read_inventory`, not read_materials. PROMOTION
+CHECKLIST UPDATED: the re-auth on staging→main is for **read_inventory**. tsc/build green, 861/861.
+
 ### [2026-06-09] DONE (staging) — RECURRING JOBS feature COMPLETE on staging (#282 CSV + #281 catalog)
 All 5 phases now stacked on staging (integrated tsc/build green, 861/861): #275 engine+store, #277 form+
 mgmt, #279 create-now+materialiser+custom-fix, #280 daily cron, #281 materials catalog (read_materials
