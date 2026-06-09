@@ -3,6 +3,18 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-09] DONE (staging) — RECURRING JOBS Phase 3 (form + template mgmt) — PR #277
+Dan picked "form first, scope later". On staging. NEW platform-owned files only: API CRUD under
+`/api/account/recurring-jobs` (list/create + `[id]` GET/PUT/DELETE + `[id]/duplicate`), gated by
+`requireAdvancedFeature("recurring")`; UI = `RecurringTemplatesPanel` (table + New button on /recurring)
++ `RecurringJobFormClient` + `CadenceBuilder` + pages `/recurring/new` & `/recurring/[id]/edit`. Edited
+ONLY `src/app/recurring/page.tsx` (added the panel) — no other shared/cross-domain files. No SM8 job
+creation yet, NO scope change. tsc/build green, 840/840. NOT promoted — Dan verifies staging.
+**Stacked on staging now (NOT prod): #275 (Phase1 engine), #276 (test-isolation), #277 (Phase3 form).**
+**HEADS-UP Phase 4 = cron materialiser** (creates occurrences into SM8); **Phase 2 = materials catalog**
+needs `read_materials` in SM8_SCOPES (shared servicem8.ts → all-tenant re-auth) — separate STARTING + loud
+flag before I touch it.
+
 ### [2026-06-09] DONE (staging) — test-isolation fix — PR #276
 Fixed the parallel-suite flakiness I flagged below. Root cause: `db.ts` reads DATA_DIR at module-load
 and falls back to shared `./data`; vitest runs files in parallel → store suites clobber each other's
