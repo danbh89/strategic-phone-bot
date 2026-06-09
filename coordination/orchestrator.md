@@ -6,6 +6,19 @@ domain's files while its AI is active — routes via a `→` note instead.
 
 ## Log (newest first)
 
+### [2026-06-08] STARTING — American-spelling sweep (orchestrator direct; cross-cutting, prose-only)
+Dan asked to convert English/Australian spellings → American across the platform (he spotted an
+"authorise" with an s). Cross-domain cosmetic sweep; all three AIs idle, no single owner → I'm
+doing it directly. Branch `chore/american-spelling` (off staging) in the product repo.
+**Scope = PROSE ONLY** (Dan's pick): comments, JSDoc, and user-facing UI/strings. Method:
+a comment-scoped script (only edits lines whose first non-ws is `//`/`*`/`/*`) + ~18 explicit
+UI-string edits. **Identifiers left untouched** per Dan (cancelled flags, VOICE_CATALOGUE,
+analyseRecurringJobs, applyCancellation, normalised local vars, JS Promise "fulfilled").
+**Contracts EXCLUDED:** SM8 "Cancelled" status, Stripe "canceled", OAuth scopes, the
+`"not-authorised"` error-code string, and the SM8-quoted `'not an authorised object type'` text.
+Touches files across all four domains incl. shared `accounts.ts` (2-word default-agreement prose
+"authorise"→"authorize") — claiming it here; AI1 idle. → PR vs staging, tsc+test+build green.
+
 ### [2026-06-08] DONE — PROMOTED staging→main (#255–#261) — ON PROD (Dan's go)
 Dan verified staging and said "push everything to production." Promoted the whole stack via
 **merge commit** (PR #262, merge `7382711`). Post-merge `git diff main staging` = **EMPTY**
