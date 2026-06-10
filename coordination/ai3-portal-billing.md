@@ -3,6 +3,42 @@
 (Newest entries at top. This file is written ONLY by AI3. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-08] STATE / SESSION MOVE — AI3 resuming on a new machine (read this first)
+This AI3 (`ai3-portal-billing`) session is being moved to the machine that also runs AI2.
+The old machine's checkout is being ABANDONED — verified clean (working tree empty, local
+`staging` 0-ahead/behind-only of origin, no unpushed branches). **Resume entirely from GitHub.**
+
+**Domain:** customer portal, Stripe billing, the multi-user auth/permissions system, and the
+Active Jobs Summary (legacy). Key code: `src/lib/tenant-users.ts` (permission primitives —
+`sessionCan` / `hasOwnerAccess` / `adminAccess` / `transferOwnership` / PERMISSION_KEYS),
+`src/lib/billing.ts`, `src/lib/password.ts`, `src/app/api/account/**`, `src/app/api/auth/**`,
+`src/app/advanced/admin/**`, `src/app/login`, `src/app/set-password`, `src/app/upgrade/**`,
+`src/app/portal/**` + `src/lib/portal-*.ts`.
+
+**DONE & ON PROD** (the whole multi-user/permissions/financial-restriction effort Dan asked
+for): per-user email+password logins; granular per-user permissions; Owner + multiple Admins
+(`manage_users`) with transfer-ownership; OAuth login-bypass CLOSED (password is the gate now —
+OAuth on an owner-account → /login); financial $-mask (AI1 server-zero #250-254 + client-hide
+#260; reports/recurring blocked; billing gated; AJS has no $); Stripe billing live + trial-synced;
+Admin tab = Users + Company Info + SM8 reconnect/disconnect. PRs: #238 #242 #243 #244 #245 #246
+#247 #248 #249(promote) #256 #258 #259 #260 #261.
+
+**STAGING-ONLY / the only open thread:** #263 — `POST /api/billing/checkout-session` accepts an
+optional same-origin `successUrl`/`cancelUrl` (open-redirect-guarded via `sameOriginUrl`).
+Handed to AI1 to point the onboarding plan-picker at `/dashboard` — NOT AI3 work; just watch for
+their wire-up + the next staging→main promote.
+
+**Backlog: CLEAR.** No active AI3 task. Standing by for Dan.
+
+**Resume protocol (new session, on AI2's machine):** (1) you are AI3, id `ai3-portal-billing`;
+(2) use your OWN product checkout/worktree of StillframeLLC/servicem8-reports on `staging` — do
+NOT share AI2's working tree (two sessions on one box → separate worktrees; the `../coord` clone
+IS shared, each writes only its own file); (3) `git -C ../coord pull`, read every coordination/
+file; (4) follow the protocol (pull+read before tasks; newest-at-top to THIS file only; STARTING
+claim before edits; shared/platform files → "→ platform" to AI1); (5) post an "AI3 online —
+resumed" entry and tell Dan you're standing by. Pipeline: feat/* → PR vs staging → tsc+test+build
+green → merge staging; never promote to main without Dan's go; Co-Authored-By: Claude Opus 4.8.
+
 ### [2026-06-08] DONE — my half of the OAuth-bypass batch is ON STAGING (product PR #259)
 → platform/AI1: **mine is on staging** (c9bf787), sitting on top of your #258. Batch complete on
 staging: #258 (callback) + #259 (removed /login "Connect" button + tightened hasOwnerAccess/
