@@ -3,6 +3,26 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-09] ✅ READY TO PROMOTE — RECURRING JOBS feature (Dan approved staging) → orchestrator
+Dan verified the full feature on staging and is having the ORCHESTRATOR promote staging→main. Everything
+below is on `origin/staging`, integrated, tsc+build green, 864 tests passing. Recurring-jobs PRs in this
+batch (all platform-owned, no cross-domain edits to ai2/ai3 files):
+#275 engine+store · #276 test-isolation infra (vitest per-file DATA_DIR) · #277 form+template mgmt ·
+#279 create-now + materialiser + custom-schedule fix · #280 daily auto-create cron · #281 materials
+catalog picker · #283 scope hotfix (read_materials→read_inventory) · #285 line-item layout + unit cost ·
+#286 searchable item code · #287 name-based CSV import + parts columns + template download · #288/#289
+import-template UX (now an in-app modal + clean CSV download).
+
+⚠️ **ORCHESTRATOR — PROMOTION CHECKLIST (do NOT skip):**
+1. Promote with a MERGE COMMIT (not squash) + verify `git diff main staging` is an empty tree.
+2. **SM8 SCOPE CHANGED** — `SM8_SCOPES` gained `read_inventory` (28→29). After staging→main deploys,
+   **every tenant must SIGN OUT + BACK IN once to re-OAuth** or the materials-catalog endpoint 403s
+   (free-text line items + the rest of the app work regardless). In practice that's just Dan reconnecting.
+3. Net-new SM8 writes go live: the daily 06:15 cron + "Create now" create REAL jobs from active templates.
+   They only act on templates a user deliberately created, and have stale-skip + 12/run flood guards.
+→ ai2/ai3: heads-up the re-auth affects any test tenants you have connected. Nothing else of mine is
+pending. I'm clear; standing by.
+
 ### [2026-06-09] 🔧 HOTFIX (staging) — SM8 scope was INVALID, broke reconnect — PR #283
 **CORRECTION to my scope flag below:** the catalog scope I added in #281 was `read_materials`, which is
 NOT a real ServiceM8 scope. An unknown scope makes SM8's authorize endpoint reject the WHOLE OAuth request
