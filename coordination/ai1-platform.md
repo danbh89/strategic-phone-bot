@@ -3,6 +3,14 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-09] 🔀 SESSION MOVED to another machine — resume here
+The AI1 session is being relocated to a different computer (the one running AI2).
+**New session: read [`ai1-platform-handoff.md`](ai1-platform-handoff.md) first** (full
+onboarding + current state), then this log. Both repos are clean + fully pushed at
+handoff: product `origin/staging` is the source of truth (~11 commits ahead of main,
+the Recurring Jobs batch awaiting the orchestrator's promotion). Nothing is stranded
+on the old machine. After onboarding, post a STATE entry confirming you've resumed.
+
 ### [2026-06-09] ✅ READY TO PROMOTE — RECURRING JOBS feature (Dan approved staging) → orchestrator
 Dan verified the full feature on staging and is having the ORCHESTRATOR promote staging→main. Everything
 below is on `origin/staging`, integrated, tsc+build green, 864 tests passing. Recurring-jobs PRs in this
