@@ -6,6 +6,120 @@ domain's files while its AI is active — routes via a `→` note instead.
 
 ## Log (newest first)
 
+### [2026-06-08] DONE — PROMOTED staging→main (#263–#266) — ON PROD (Dan's go)
+Promoted via merge commit (PR #267, `1d5cdcf`); `git diff main staging` EMPTY after. LIVE on prod:
+the **#266 db-corruption hotfix** (atomic writes + no-silent-rebuild + break-glass owner recovery)
+plus #263 (billing checkout URL), #264 (spelling), #265 (dashboard banner). Deploy = a restart;
+new load() reads accounts.json — parses fine → atomic writes now protect data going forward; if it
+were corrupt it fails loud (not silent-wipe). Dan: get back in via OAuth bootstrap or set
+`OWNER_RECOVERY_SECRET` + use `/api/break-glass/owner-recovery`, then re-invite users (safe now).
+
+### [2026-06-08] INCIDENT (root cause CORRECTED) — accounts.json corruption wiped tenant_users
+Dan: prod users vanished, flickered back, invite link "expired" instantly, owner login gone (locked
+out). FIRST diagnosis (multi-instance/Railway replicas) was WRONG — Dan confirmed prod is 1 replica,
+no autoscaling. **Real cause (single-instance, code): `db.ts save()` wrote accounts.json IN PLACE,
+so a write interrupted by a restart/redeploy/crash truncated it to invalid JSON. Next boot `load()`
+silently swallowed the parse error and fell through to the fresh-install path — rebuilding accounts
+from legacy tokens.json (NO tenant_users) and saving over the file. Customers preserved, all users
+destroyed.** Explains the flicker (pre-clobber memory vs reloaded-wiped disk), "only the invited
+user" (invite appended onto wiped base), and the dead invite link.
+
+Hotfix PR #266 → staging (branch `hotfix/single-instance-store`):
+1. **Atomic writes** — temp file + rename(2); an interrupted write can't truncate accounts.json.
+2. **No silent destructive rebuild** — corrupt existing file → back up + throw, never auto-rebuild;
+   migrate runs only on a true fresh install.
+3. **mtime disk-resync** + numReplicas:1 pin (defense-in-depth; replicas already 1).
+4. **Break-glass owner recovery** — `OWNER_RECOVERY_SECRET`-gated `/api/break-glass/owner-recovery`
+   + `forceSetOwnerLogin` so a destroyed owner login can't lock Dan out. tsc clean · 772 tests · build green.
+
+**Dan:** set `OWNER_RECOVERY_SECRET` in Railway, then promote #266; recover owner via the endpoint;
+re-invite wiped users (unrecoverable but won't be wiped again). Lesson: shared `db.ts` is the
+single point of data integrity — atomic writes are mandatory. **→ ai1 owns db.ts; this hotfix
+edited it directly under incident pressure — AI1 please review the atomic-write/load changes.**
+
+### [2026-06-08] DONE — dashboard banner tweaks (product PR #265 → staging)
+(1) Advanced Tools promoted from the top-row tools icon → labeled button in the main nav pill-bar
+(style matches Reports/Map/Admin, after Help, same `hasAdvancedAccess` gate). (2) Removed the
+redundant "Company Branding" section from the config (gear) dropdown — logo/company-info lives in
+Advanced Tools → Company Info; `serverLogo` state kept (drives banner logo). One file
+(DashboardClient.tsx), +11/−39. tsc clean · 765 tests · build green. Staging-only, draft PR #265.
+
+FYI staging vs prod: only **#263** (AI3 billing checkout success/cancel URL override) sits on
+staging un-promoted; flagged to Dan. My #264 (spelling) + #265 (this) are draft PRs not yet on
+staging.
+
+### [2026-06-08] STARTING — dashboard banner tweaks (orchestrator direct; platform/AI1 idle)
+Two Dan UI asks, both in `src/components/DashboardClient.tsx` (platform-owned; AI1 idle, claiming):
+(1) **Remove the "Company Branding" section from the config (gear) dropdown** — redundant now that
+logo/company-info lives in Advanced Tools → Company Info. Keep `serverLogo` state (drives the banner
+logo); only the editing input is removed. (2) **Promote "Advanced Tools" into the main nav pill-bar**
+as a labeled button (matching Reports/Map/Admin), replacing the little tools icon in the top control
+row. Branch `feat/dashboard-banner-tweaks` off staging. → PR vs staging, tsc+test+build green.
+
+### [2026-06-08] DONE — American-spelling sweep (product PR #264 → staging)
+Prose-only British→American sweep: **168 word changes across 68 files**. Comment-scoped script
+(only //, *, /* lines) + ~20 explicit UI-string fixes. Identifiers + external contracts (SM8
+"Cancelled", Stripe "canceled", OAuth scopes, "not-authorised" error code, SM8-quoted
+'not an authorised object type', {colour} test fixture) deliberately untouched. tsc clean · 763
+tests · build green. Staging-only, NOT self-promoting (cosmetic; Dan can fold into the next
+promote or take alone). PR #264 (draft). AI1's shared `accounts.ts` touched only for the 2-word
+default-agreement prose "authorise"→"authorize".
+
+### [2026-06-08] STARTING — American-spelling sweep (orchestrator direct; cross-cutting, prose-only)
+Dan asked to convert English/Australian spellings → American across the platform (he spotted an
+"authorise" with an s). Cross-domain cosmetic sweep; all three AIs idle, no single owner → I'm
+doing it directly. Branch `chore/american-spelling` (off staging) in the product repo.
+**Scope = PROSE ONLY** (Dan's pick): comments, JSDoc, and user-facing UI/strings. Method:
+a comment-scoped script (only edits lines whose first non-ws is `//`/`*`/`/*`) + ~18 explicit
+UI-string edits. **Identifiers left untouched** per Dan (cancelled flags, VOICE_CATALOGUE,
+analyseRecurringJobs, applyCancellation, normalised local vars, JS Promise "fulfilled").
+**Contracts EXCLUDED:** SM8 "Cancelled" status, Stripe "canceled", OAuth scopes, the
+`"not-authorised"` error-code string, and the SM8-quoted `'not an authorised object type'` text.
+Touches files across all four domains incl. shared `accounts.ts` (2-word default-agreement prose
+"authorise"→"authorize") — claiming it here; AI1 idle. → PR vs staging, tsc+test+build green.
+
+### [2026-06-08] DONE — PROMOTED staging→main (#255–#261) — ON PROD (Dan's go)
+Dan verified staging and said "push everything to production." Promoted the whole stack via
+**merge commit** (PR #262, merge `7382711`). Post-merge `git diff main staging` = **EMPTY**
+(tree parity confirmed — no silently-dropped work). Railway auto-deploys main.
+
+**Now LIVE on prod:**
+- #255 header signed-in user + v1.12.0 + sm8-connection admin gate
+- #256 transfer ownership · #257 customizable customer confirmation email
+- **#258 + #259 OAuth login-bypass CLOSED** (hardened callback + removed /login Connect button +
+  tightened legacy OAuth rule) — promoted TOGETHER as required; Dan verified password login /
+  owner Reconnect / fresh-OAuth→/login / 2nd-tenant bootstrap on staging first.
+- #260 client-side $-widget hiding · #261 "Admin" as a per-user permission / multiple admins
+
+staging == main; nothing left to promote. The security bypass is closed in prod. All QUEUED
+items from the prior brief are now shipped. Holding for Dan's next direction.
+
+### [2026-06-08] STATE SYNC — onboarded; product access restored; whole OAuth-bypass batch on staging, holding for Dan's verify
+Re-onboarded from all four coordination files. **Product repo access CONFIRMED** (`git ls-remote`
+on `StillframeLLC/servicem8-reports` succeeds — the prior orchestrator lockout is gone).
+
+Verified coordination logs against live PR state. **7 PRs sit on `staging`, NONE promoted to
+`main`/prod** (`git log main..staging` = #255→#261, 24 files / +797/-89):
+- #255 header signed-in user + v1.12.0 + sm8-connection admin gate (AI1)
+- #256 transfer ownership (AI3)
+- #257 customizable customer confirmation email (AI1)
+- **#258 close OAuth login bypass — hardened callback (AI1)**  ⟵ SECURITY linchpin
+- **#259 OAuth-bypass AI3 half — remove /login Connect button + tighten legacy rule**  ⟵ pairs w/ #258
+- #260 client-side $-widget hiding (AI1) — was "QUEUED", now DONE on staging
+- #261 "Admin" as a per-user permission / multiple admins (AI3) — was "QUEUED", now DONE on staging
+
+**Net:** both items I had listed as QUEUED (#260, #261) already landed on staging. There is NO
+open dispatch and NO idle-domain product work for me to pick up directly. The entire system is
+blocked on **Dan's staging verify + promote signal**.
+
+**Promotion gate (unchanged, critical):** #258 + #259 MUST promote together so Dan isn't locked
+out. Before any promote, Dan verifies on staging: (1) password login works · (2) owner Reconnect
+keeps him signed in · (3) fresh OAuth on his owner-tenant → `/login` (no full session) · (4) 2nd
+tenant w/ no owner still bootstraps via OAuth. On his go: promote the whole #255→#261 stack
+staging→main via MERGE commit + `git diff main staging` empty check. NEVER self-promote.
+
+Holding for Dan's direction. No collisions; all three AIs idle per their last DONE entries.
+
 ### [2026-06-03] → ai3 + ai1 — "Admin" tab consolidation (Dan, placement locked)
 
 Dan locked the UI. The owner-only **"Users" tab becomes the "Admin" tab** and absorbs the
