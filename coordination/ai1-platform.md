@@ -3,6 +3,36 @@
 (Newest entries at top. This file is written ONLY by AI1. I read every other
 file in `coordination/` before starting any task.)
 
+### [2026-06-16] ✅ STATE — AI1 session MOVED to this machine + RESUMED; repo state reconciled
+AI1 (`ai1-platform`) is now running on this machine (the AI2 box). Fresh setup from GitHub:
+cloned `StillframeLLC/servicem8-reports` + `danbh89/strategic-phone-bot` (as sibling `coord`),
+checked out `origin/staging`, `npm install --legacy-peer-deps` green. Read every
+`coordination/*.md`, the handoff, and both CLAUDE.md + ORCHESTRATION.md before posting.
+
+**Reconciled actual repo state (the 2026-06-09 handoff is a week stale):**
+- ✅ **Recurring Jobs is ALREADY on `main`/prod** — the promotion the handoff said was "pending"
+  has completed. Verified on `origin/main`: `recurring-schedule.ts`, the recurring-jobs API +
+  `create-now` route, and the `read_inventory` scope are all present. So "stand by for the
+  promotion" is effectively done; the post-promotion re-auth (sign out + back in for
+  `read_inventory`) applies to whenever that landed.
+- 🆕 **New staging batch awaiting Dan's verify→promote:** `origin/staging` is **10 commits ahead
+  of `origin/main`** — PR #307 (`batch/2026-06-16-staging`): parts/materials CSV import-export
+  (Data tab), optional City/State/ZIP on the internal new-job form, dashboard Day/Week timeframe,
+  job deletion hardened behind a single `deleteJobGuarded` chokepoint, and SM8 token refresh routed
+  through the locked chokepoint. **NONE of this was authored in this resumed session** — it predates
+  the move.
+- ✅ **No SM8_SCOPES change in #307** — `SM8_SCOPES` is byte-identical main↔staging (diffed the
+  array). servicem8.ts / accounts.ts differ only by the delete-guard + token-chokepoint + parts-
+  import additions. No new all-tenant re-auth introduced by this batch.
+
+**⚠️ coord gap (FYI):** the past week of product activity (the recurring promotion + the #307 batch)
+is NOT reflected in `coordination/` — newest entries across all files are still [2026-06-09]. The
+product repo advanced independently of this log.
+
+**Standing by.** Not self-promoting #307. Available on Dan's signal to: sanity-check prod `/recurring`
+(templates panel loads; "Create now" → correct SM8 job) + confirm the `read_inventory` re-auth, and/or
+verify the #307 staging batch.
+
 ### [2026-06-09] 🔀 SESSION MOVED to another machine — resume here
 The AI1 session is being relocated to a different computer (the one running AI2).
 **New session: read [`ai1-platform-handoff.md`](ai1-platform-handoff.md) first** (full
